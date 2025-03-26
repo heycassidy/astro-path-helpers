@@ -21,7 +21,7 @@
     "paths",
     "helpers"
   ],
-  "homepage": "TODO:",
+  "homepage": "https://github.com/heycassidy/astro-path-helpers/tree/main/package",
   "exports": {
     ".": {
       "import": "./dist/index.js",
