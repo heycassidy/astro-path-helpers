@@ -1,0 +1,15 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "es6",
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "baseUrl": "."
+  },
+  "exclude": ["dist"],
+  "include": ["src"]
+}

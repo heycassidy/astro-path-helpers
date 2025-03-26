@@ -1,0 +1,4 @@
+---
+title: Foo
+slug: foooooooo
+---

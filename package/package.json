@@ -1,0 +1,54 @@
+{
+  "name": "astro-path-helpers",
+  "version": "0.0.0",
+  "description": "Dynamic path helpers for Astro routes.",
+  "author": {
+    "email": "cassidy@cassidysmith.dev",
+    "name": "Cassidy Smith",
+    "url": "https://cassidysmith.dev"
+  },
+  "license": "MIT",
+  "keywords": [
+    "astro-integration",
+    "withastro",
+    "astro",
+    "tooling",
+    "utility",
+    "utils",
+    "utilities",
+    "routing",
+    "routes",
+    "paths",
+    "helpers"
+  ],
+  "homepage": "TODO:",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./integration": {
+      "import": "./dist/integration.js",
+      "types": "./dist/integration.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "astro": "^5.5.4"
+  },
+  "dependencies": {
+    "astro-integration-kit": "^0.18.0",
+    "esbuild": "^0.25.1",
+    "inflection": "^3.0.2",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "astro": "^5.5.4",
+    "tsup": "^8.4.0"
+  }
+}

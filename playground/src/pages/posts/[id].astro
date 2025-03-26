@@ -1,0 +1,14 @@
+---
+import { getCollection } from "astro:content"
+import { articlesPath } from "astro-path-helpers"
+export async function getStaticPaths() {
+  const posts = await getCollection("posts")
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }))
+}
+const { post } = Astro.props
+---
+<h1>{post.data.title}</h1>
+<a href={articlesPath()}>All Posts</a>
