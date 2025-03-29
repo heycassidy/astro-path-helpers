@@ -15,6 +15,6 @@ jobs:
     - run: pnpm build
 
     - name: Publish release
-      run: pnpm publish --provenance --access public --no-git-checks
+      run: pnpm publish --no-git-checks
       working-directory: dist
       env: { NODE_AUTH_TOKEN: "${{secrets.NPM_TOKEN}}" }
