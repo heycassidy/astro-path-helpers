@@ -16,4 +16,5 @@ jobs:
 
     - name: Publish release
       run: npm publish --provenance --access public --no-git-checks
+      working-directory: dist
       env: { NODE_AUTH_TOKEN: "${{secrets.NPM_TOKEN}}" }
