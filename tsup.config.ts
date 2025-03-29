@@ -1,3 +1,4 @@
+import { copyFile } from "fs/promises"
 import { defineConfig } from "tsup"
 import { peerDependencies } from "./package.json"
 
@@ -16,5 +17,9 @@ export default defineConfig((options) => {
       "virtual:astro-path-helpers", // Add the virtual module to external
     ],
     tsconfig: "tsconfig.json",
+    async onSuccess() {
+      copyFile("package.json", "dist/package.json")
+      copyFile("README.md", "dist/README.md")
+    }
   }
 })

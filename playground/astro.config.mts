@@ -9,7 +9,7 @@ export default defineConfig({
       resources: [{ name: "articles", path: "posts" }],
     }),
     hmrIntegration({
-      directory: createResolver(import.meta.url).resolve("../package/dist"),
+      directory: createResolver(import.meta.url).resolve("../dist"),
     }),
   ],
 })
