@@ -58,7 +58,7 @@ These are possible features in future releases:
 I'd love to hear your ideas! Have a feature you'd like to see in `astro-path-helpers`? Please reach out and share your suggestions - community feedback helps make this integration better for everyone!
 
 
-### Installation
+## Installation
 
 Install the integration **automatically** using the Astro CLI:
 
