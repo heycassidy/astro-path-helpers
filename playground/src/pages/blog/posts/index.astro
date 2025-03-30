@@ -1,12 +1,12 @@
 ---
 import { getCollection } from "astro:content"
-import { articlePath } from "astro-path-helpers"
+import { postPath } from "astro-path-helpers"
 const posts = await getCollection("posts")
 ---
 <h1>All Posts</h1>
 
 <ul>
   {posts.map(post => (
-    <li><a href={articlePath(post.id)}>{post.data.title}</a></li>
+    <li><a href={postPath(post.id)}>{post.data.title}</a></li>
   ))}
 </ul>
