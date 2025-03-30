@@ -39,7 +39,6 @@ Here are more examples showing how path helpers are generated based on your rout
 ## Limitations
 
 Currently, `astro-path-helpers` has several limitations:
-- Only supports routes defined in the `/pages` directory
 - Does not support rest parameters in routes (e.g., `[...slug]`)
 - Does not support multi-part segments in routes (e.g., `/pages/[zip]-[zap]`)
 - Dynamic segments must be preceded by a static segment so that helper names are unambiguous
