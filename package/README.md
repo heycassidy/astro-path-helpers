@@ -5,14 +5,6 @@
 This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that generates type-safe path helper functions for your Astro routes, making it easy to manage and reference nested routes in your application.
 
 
-
-## Features
-
-- 🔒 **Type-safe paths** - Generate helper functions based on your Astro routes (e.g., `postPath(post.id")` → `/posts/hello`)
-- 🧠 **Smart name handling** - Automatically handles singular and plural forms
-- 🛠️ **Customizable paths** - Override path segments when they don't match Astro routes
-- 🌲 **Nested routes support** - *(Coming soon)* Support for deeply nested resource routes
-
 ## Usage
 
 `astro-path-helpers` simplifies route management by generating consistent path helper functions based on your configured resources. After setup, you'll have reliable, type-safe links throughout your application. For example, with routes like:
@@ -76,41 +68,6 @@ export default defineConfig({
   ],
 });
 ```
-
-### Configuration
-
-By default, `astro-path-helpers` will scan your Astro routes and generate helper functions automatically. However, you can use the configuration object to:
-
-1. Override path generation for existing routes
-2. Add custom path helpers for routes that don't exist yet
-
-The integration accepts a configuration object with the following properties:
-
-```typescript
-interface PathHelpersOptions {
-  resources: ResourceConfig[];
-}
-
-interface ResourceConfig {
-  name: string;       // The plural name of the resource (e.g., "posts")
-  path?: string;      // Optional path override if different from the name, use this if you want the path segment to be different from the resource name
-}
-```
-
-### Example Configuration
-```typescript
-pathHelpers({
-  resources: [
-    { name: "people", path: "staff" },
-  ]
-})
-```
-
-This configuration generates these helper functions:
-
-- `peoplePath()` → `/staff` (uses the custom path "staff" instead of "people")
-- `personPath(personId)` → `/staff/${personId}` (correctly uses singular "person" form with ID parameter)
-
 
 ## Contributing
 
