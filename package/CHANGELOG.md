@@ -1,5 +1,12 @@
 # astro-path-helpers
 
+## 0.1.1
+
+### Patch Changes
+
+- [`fabe14a`](https://github.com/heycassidy/astro-path-helpers/commit/fabe14a65fc6a57a607d4234bd06094a0bf07305) Thanks [@heycassidy](https://github.com/heycassidy)! - - Add missing package.json repository field
+  - Change package.json homepage link to point to package README
+
 ## 0.1.0
 
 ### Minor Changes
