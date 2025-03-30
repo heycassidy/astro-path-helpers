@@ -21,7 +21,7 @@
     "paths",
     "helpers"
   ],
-  "homepage": "https://github.com/heycassidy/astro-path-helpers/tree/main/package",
+  "homepage": "https://github.com/heycassidy/astro-path-helpers/blob/main/package/README.md",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -32,9 +32,7 @@
       "types": "./dist/integration.d.ts"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup"
