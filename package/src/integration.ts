@@ -1,43 +1,18 @@
 import { writeFileSync } from "node:fs"
-import { fileURLToPath } from "node:url"
 import type { AstroIntegration } from "astro"
-import { generatePathHelpers, generateTypeDeclarations } from "./codegen.js"
-
-function setupVirtualModule(helpersDir: URL) {
-  const virtualModuleId = "virtual:astro-path-helpers"
-  const resolvedVirtualModuleId = `\0${virtualModuleId}`
-
-  return {
-    name: "astro-path-helpers-virtual",
-    resolveId(id: string) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId
-      }
-    },
-    load(id: string) {
-      if (id === resolvedVirtualModuleId) {
-        const generatedPath = fileURLToPath(new URL("generated.ts", helpersDir))
-        return `export * from "${generatedPath}";`
-      }
-    },
-  }
-}
-
-export interface ResourceConfig {
-  name: string // plural
-  path?: string // optional override
-}
-
-export interface PathHelpersOptions {
-  resources: ResourceConfig[]
-}
+import {
+  generatePathHelpers,
+  generateTypeDeclarations,
+} from "./core/codegen.ts"
+import { isSupportedRoute } from "./core/helpers.ts"
+import type { HelperRouteMap, PathHelpersOptions } from "./types.js"
+import { setupVirtualModule } from "./vite/plugin.ts"
 
 export default function pathHelpers(
-  options: PathHelpersOptions,
+  options?: PathHelpersOptions,
 ): AstroIntegration {
-  console.log("PathHelpers integration initialized with options:", options)
-
   let helpersDir: URL
+  const helperRoutes: HelperRouteMap = new Map()
 
   return {
     name: "astro-path-helpers",
@@ -50,13 +25,27 @@ export default function pathHelpers(
         })
       },
       "astro:routes:resolved": async ({ routes }) => {
-        const code = generatePathHelpers(options.resources)
-        const filePath = new URL("generated.ts", helpersDir)
-        writeFileSync(filePath, code, "utf-8")
+        helperRoutes.clear()
+
+        for (const route of routes) {
+          if (!isSupportedRoute(route)) {
+            continue
+          }
+
+          helperRoutes.set(route.pattern, route)
+        }
+
+        const code = generatePathHelpers(helperRoutes)
+        const codePath = new URL("generated.ts", helpersDir)
+        writeFileSync(codePath, "", "utf-8")
+        writeFileSync(codePath, code, "utf-8")
+
+        const typeDeclarations = generateTypeDeclarations(helperRoutes)
+        const typeDeclarationsPath = new URL("generated.d.ts", helpersDir)
+        writeFileSync(typeDeclarationsPath, typeDeclarations, "utf-8")
       },
       "astro:config:done": ({ injectTypes }) => {
-        const typeDeclarations = generateTypeDeclarations(options.resources)
-
+        const typeDeclarations = generateTypeDeclarations(helperRoutes)
         injectTypes({
           filename: "generated.d.ts",
           content: typeDeclarations,
