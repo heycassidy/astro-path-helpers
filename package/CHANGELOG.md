@@ -1,5 +1,18 @@
 # astro-path-helpers
 
+## 0.1.0
+
+### Minor Changes
+
+- [`d1e73a9`](https://github.com/heycassidy/astro-path-helpers/commit/d1e73a999b01aaa9f406b7d513da3840aba80b4c) Thanks [@heycassidy](https://github.com/heycassidy)! - generate more helpers for more paths
+
+  - stop dropping parent of nested paths
+    in helper name
+  - name helpers differently depending on whether the parent of a nested path segment is singular (namespace) or plural (resource)
+
+  BREAKING CHANGE: generated path helpers have different names for the
+  same routes
+
 ## 0.0.1
 
 ### Patch Changes
