@@ -7,6 +7,9 @@
     "name": "Cassidy Smith",
     "url": "https://cassidysmith.dev"
   },
+  "repository": {
+    "url": "https://github.com/heycassidy/astro-path-helpers"
+  },
   "license": "MIT",
   "keywords": [
     "astro-integration",
