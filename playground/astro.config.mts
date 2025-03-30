@@ -5,9 +5,7 @@ import { defineConfig } from "astro/config"
 
 export default defineConfig({
   integrations: [
-    pathHelpers({
-      resources: [{ name: "articles", path: "posts" }],
-    }),
+    pathHelpers(),
     hmrIntegration({
       directory: createResolver(import.meta.url).resolve("../package/dist"),
     }),
