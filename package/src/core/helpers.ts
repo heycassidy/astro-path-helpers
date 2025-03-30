@@ -7,10 +7,6 @@ export function getHelperParamsFromParts(parts: RoutePart[]): string[] {
 
   const hasParams = dynamicParts.length > 0
 
-  const dynamicPartsAreUnique =
-    new Set(dynamicParts.map((part) => part.content)).size ===
-    dynamicParts.length
-
   if (!hasParams) {
     return []
   }
