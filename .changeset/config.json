@@ -3,9 +3,12 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "<repo>/<org>"
+      "repo": "heycassidy/astro-path-helpers"
     }
   ],
+  "snapshot": {
+    "useCalculatedVersion": true
+  },
   "commit": false,
   "fixed": [],
   "linked": [],

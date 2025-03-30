@@ -56,6 +56,6 @@ jobs:
           title: "[ci] release"
         env:
           # Needs the repo permissions
-          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Needs access to publish to npm
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
