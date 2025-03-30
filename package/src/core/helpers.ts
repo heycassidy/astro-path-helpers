@@ -55,14 +55,11 @@ export function getHelperNameFromParts(parts: RoutePart[]): string {
     return "rootPath"
   }
 
-  const totalStaticParts = parts.filter((p) => !p.dynamic).length
-  const isIndexPath = isRootPath || !parts[parts.length - 1].dynamic
-
   let functionName = ""
   let staticPartsCounter = 0
   let dynamicPartsCounter = 0
 
-  for (const part of parts) {
+  for (const [index, part] of parts.entries()) {
     part.dynamic ? dynamicPartsCounter++ : staticPartsCounter++
 
     if (part.dynamic) {
@@ -70,7 +67,12 @@ export function getHelperNameFromParts(parts: RoutePart[]): string {
     }
 
     const isFirstStaticPart = staticPartsCounter === 1
-    const isLastStaticPart = staticPartsCounter === totalStaticParts
+    const nextPart = index < parts.length - 1 && parts[index + 1]
+
+    // @TODO: let users configure namespaces
+    // Right now, we just assume it's a namespace if it's singular
+    const isNamespacePart =
+      !part.dynamic && singularize(part.content) === part.content
 
     // Singularize each part by default
     let functionNamePart = singularize(part.content)
@@ -81,19 +83,28 @@ export function getHelperNameFromParts(parts: RoutePart[]): string {
     }
 
     // Pluralize the last static part if it's an index path
-    if (isIndexPath && isLastStaticPart) {
+    if (!nextPart && !part.dynamic) {
       functionNamePart = pluralize(functionNamePart)
     }
 
-    // Special case: Even though it's not the first part, we haven't encountered a dynamic part yet
-    // So we replace the whole function name
+    // Pluralize this part if:
+    // 1. It's not a namespace AND
+    // 2. There's a next part (this isn't the final part) AND
+    // 3. The next part is static (i.e. this is a nested resource parent)
+    if (!isNamespacePart && nextPart && !nextPart.dynamic) {
+      functionNamePart = pluralize(functionNamePart)
+    }
+
+    // We need to add the param to the function name
+    // to disambiguate namespace routes
+    // Example:
+    // /role/members --> roleMembersPath()
+    // /role/[slug]/members --> roleSlugMembersPath(roleSlug: string)
     //
-    // Without this, these two paths would generate the same function name, productReviewsPath:
-    // /product/reviews
-    // /product/[id]/reviews/[reviewId]
-    if (dynamicPartsCounter === 0 && !isFirstStaticPart) {
-      functionName = `${functionNamePart.toLowerCase()}`
-      continue
+    // @TODO: maybe a better function name, like membersPathForRole(roleSlug: string)
+    //
+    if (isNamespacePart && nextPart && nextPart.dynamic) {
+      functionNamePart = `${functionNamePart}${camelize(nextPart.content)}`
     }
 
     // append the function name part

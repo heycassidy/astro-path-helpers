@@ -1,6 +1,6 @@
 # `astro-path-helpers`
 
-> **⚠️ WORK IN PROGRESS**: This integration is still under active development and not yet ready for production use.
+> ⚠️ This integration is still under active development and breaking changes should be expected at any point until version 1.0.0.
 
 This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that generates type-safe path helper functions for your Astro routes, making it easy to manage and reference nested routes in your application.
 
@@ -25,24 +25,42 @@ import { postsPath, postPath } from "astro-path-helpers";
 <a href={postPath("my-first-post")}>Read my first post</a>
 ```
 
-### Other Examples
+## Examples
 
-Here are more examples showing how path helpers are generated based on your route structure:
+### Nested Resources
+`/pages/products/[id]/categories` --> `productCategoriesPath(productId: string)`
 
-| Route Definition | Generated Helper Function | Notes |
-|------------------|---------------------------|-------|
-| /src/pages/products/categories | `categoriesPath(): string` | "product" gets dropped from the helper name |
-| /src/pages/products/[id]/variants/[variantId] | `productVariantPath(productId: string, variantId: string): string` | nested resources supported |
+`/pages/products/[id]/categories/[id]` --> `productCategoryPath(productId: string, categoryId: string)`
+
+`/pages/products/categories` --> `productsCategoriesPath()`
+
+`/pages/products/categories/[id]` --> `productsCategoryPath(categoryId: string)
+`
+
+Notice that the parent resource is pluralized in the function name unless it has a following parameter.
 
 
+### Namespaces
+When a path segment is singular, it is treated as a namespace rather than a resource, and we don't pluralize it in helper names:
+
+`/pages/role/members` --> `roleMembersPath()`
+
+Namespaces with a following parameter are treated as resources, but the parameter name is added to the helper name to avoid duplicate helper names:
+
+`/pages/role/[id]/members` --> `roleIdMembersPath(roleId: string)`
+
+Possible changes before 1.0.0:
+- The helper name may change to `membersPathForRole(roleId: string)`
+- Namespaces may be configurable in the integration config
 
 ## Limitations
 
 Currently, `astro-path-helpers` has several limitations:
-- Does not support rest parameters in routes (e.g., `[...slug]`)
-- Does not support multi-part segments in routes (e.g., `/pages/[zip]-[zap]`)
-- Dynamic segments must be preceded by a static segment so that helper names are unambiguous
 
+- Only supports routes defined in the `/pages` directory
+- Does not support rest parameters in routes, e.g. `[...slug]`
+- Does not support multi-part segments in routes, e.g. `/pages/[zip]-[zap]`
+- Dynamic segments must be preceded by a static segment, e.g. `/pages/[zip]/[zap]` is not allowed because `[zap]` is preceded by the dynamic segment `[zip]`
 
 ## Roadmap
 
@@ -54,6 +72,7 @@ These are possible features in future releases:
 - [ ] Support for rest parameters, e.g. /pages/books/[...slug]
 - [ ] Support for multi-part segments
 - [ ] Support for dynamic segments preceded by another dynamic segment, e.g. `/pages/products/[id]/[variant]` --> `productVariantPath(productId, variantId)`
+- [ ] Custom rules and overrides for route name singularization and pluralization
 
 I'd love to hear your ideas! Have a feature you'd like to see in `astro-path-helpers`? Please reach out and share your suggestions - community feedback helps make this integration better for everyone!
 
