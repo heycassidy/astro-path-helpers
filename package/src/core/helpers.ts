@@ -18,8 +18,9 @@ export function getHelperParamsFromParts(parts: RoutePart[]): string[] {
     return []
   }
 
-  // @TODO: Stronger typing. We already know we don't dynamic parts are preceded
-  // by a static part from `isSupportedRoute` but TypeScript doesn't know it
+  // @TODO: Stronger typing. We already know we don't support dynamic parts that
+  // are not preceded by a static part from `isSupportedRoute` but TypeScript
+  // doesn't know it yet
   for (const [index, part] of parts.entries()) {
     const prevStaticPart =
       index > 0 && !parts[index - 1].dynamic && parts[index - 1]
