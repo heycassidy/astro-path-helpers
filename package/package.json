@@ -1,11 +1,14 @@
 {
   "name": "astro-path-helpers",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Dynamic path helpers for Astro routes.",
   "author": {
     "email": "cassidy@cassidysmith.dev",
     "name": "Cassidy Smith",
     "url": "https://cassidysmith.dev"
+  },
+  "repository": {
+    "url": "https://github.com/heycassidy/astro-path-helpers"
   },
   "license": "MIT",
   "keywords": [
@@ -21,7 +24,7 @@
     "paths",
     "helpers"
   ],
-  "homepage": "https://github.com/heycassidy/astro-path-helpers/tree/main/package",
+  "homepage": "https://github.com/heycassidy/astro-path-helpers/blob/main/package/README.md",
   "exports": {
     ".": {
       "import": "./dist/index.js",
