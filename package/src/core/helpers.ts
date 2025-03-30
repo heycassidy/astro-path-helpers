@@ -1,6 +1,13 @@
 import type { IntegrationResolvedRoute, RoutePart } from "astro"
 import { camelize, capitalize, pluralize, singularize } from "inflection"
 
+/**
+ * Extracts a list of parameter names to be used in a helper function signature
+ * based on the dynamic parts of the route.
+ *
+ * @param {RoutePart[]} parts - The parts of the route segment.
+ * @returns {string[]} An array of parameter names, formatted in camelCase.
+ */
 export function getHelperParamsFromParts(parts: RoutePart[]): string[] {
   const dynamicParts: RoutePart[] = parts.filter((part) => part.dynamic)
   const processedParts: string[] = []
@@ -35,6 +42,12 @@ export function getHelperParamsFromParts(parts: RoutePart[]): string[] {
   return processedParts
 }
 
+/**
+ * Generates the name of the helper function based on the route parts.
+ *
+ * @param {RoutePart[]} parts - The parts of the route segment.
+ * @returns {string} The generated helper function name.
+ */
 export function getHelperNameFromParts(parts: RoutePart[]): string {
   const isRootPath = parts.length === 0
 
@@ -90,6 +103,14 @@ export function getHelperNameFromParts(parts: RoutePart[]): string {
   return functionName
 }
 
+/**
+ * Generates the return statement of a helper function as a string template or
+ * string literal, depending on whether parameters are needed.
+ *
+ * @param {RoutePart[]} parts - The parts of the route segment.
+ * @param {string[]} params - The parameter names to inject into the dynamic segments.
+ * @returns {string} The formatted return statement for the helper function.
+ */
 export function getHelperReturnPathFromSegments(
   parts: RoutePart[],
   params: string[],
@@ -114,6 +135,12 @@ export function getHelperReturnPathFromSegments(
   return functionReturnStatement
 }
 
+/**
+ * Determines if a given route is supported for helper generation.
+ *
+ * @param {IntegrationResolvedRoute} route - The resolved route to check.
+ * @returns {boolean} True if the route is supported; otherwise false.
+ */
 export function isSupportedRoute(route: IntegrationResolvedRoute): boolean {
   // For now we only support project page routes
   if (route.type !== "page" || route.origin !== "project") {

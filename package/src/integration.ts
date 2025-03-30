@@ -40,6 +40,7 @@ export default function pathHelpers(
         writeFileSync(codePath, "", "utf-8")
         writeFileSync(codePath, code, "utf-8")
 
+        // re-generate types when routes change
         const typeDeclarations = generateTypeDeclarations(helperRoutes)
         const typeDeclarationsPath = new URL("generated.d.ts", helpersDir)
         writeFileSync(typeDeclarationsPath, typeDeclarations, "utf-8")
