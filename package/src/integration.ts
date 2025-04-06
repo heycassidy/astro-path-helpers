@@ -4,8 +4,8 @@ import {
   generatePathHelpers,
   generateTypeDeclarations,
 } from "./core/codegen.ts"
-import { isSupportedRoute } from "./core/helpers.ts"
-import type { HelperRouteMap, PathHelpersOptions } from "./types.js"
+import type { HelperRouteMap, PathHelpersOptions } from "./core/types.js"
+import { isSupportedRoute } from "./core/validation.ts"
 import { setupVirtualModule } from "./vite/plugin.ts"
 
 export default function pathHelpers(
@@ -29,7 +29,7 @@ export default function pathHelpers(
 
         for (const route of routes) {
           if (!isSupportedRoute(route)) {
-            continue
+            continue // Silently skip unsupported routes
           }
 
           helperRoutes.set(route.pattern, route)
