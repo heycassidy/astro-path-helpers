@@ -13,7 +13,9 @@
     "ci:version": "pnpm exec changeset version && pnpm install --no-frozen-lockfile && pnpm dedupe",
     "ci:publish": "pnpm exec changeset publish && git push --follow-tags",
     "lint": "biome check .",
-    "lint:fix": "biome check --write ."
+    "lint:fix": "biome check --write .",
+    "test:unit": "pnpm --filter astro-path-helpers test:unit",
+    "test:unit:dev": "pnpm --filter astro-path-helpers test:unit:dev"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
