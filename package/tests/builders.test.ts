@@ -12,79 +12,79 @@ const routeFixtureToExpectedPartsMap = {
   root: [
     'rootPath',
     '',
-    '"/"',
+    '/',
   ],
 
   rootParam: [
     'rootSlug',
     'slug: string',
-    '`/${slug}`',
+    '/${slug}',
   ],
 
   about: [
     'aboutPath',
     '',
-    '"/about"',
+    '/about',
   ],
 
   blog: [
     'blogPath',
     '',
-    '"/blog"',
+    '/blog',
   ],
 
   blogPosts: [
     'blogPostsPath',
     '',
-    '"/blog/posts"',
+    '/blog/posts',
   ],
 
   blogPostDetail: [
     'blogPostPath',
     'postId: string',
-    '`/blog/posts/${postId}`',
+    '/blog/posts/${postId}',
   ],
 
   blogAuthors: [
     'blogAuthorsPath',
     '',
-    '"/blog/authors"',
+    '/blog/authors',
   ],
 
   blogAuthorDetail: [
     'blogAuthorPath',
     'authorId: string',
-    '`/blog/authors/${authorId}`',
+    '/blog/authors/${authorId}',
   ],
 
   blogAuthorPosts: [
     'blogAuthorPostsPath',
     'authorId: string',
-    '`/blog/authors/${authorId}/posts`',
+    '/blog/authors/${authorId}/posts',
   ],
 
   products: [
     'productsPath',
     '',
-    '"/products"',
+    '/products',
   ],
 
   productDetail: [
     'productPath',
     'productId: string',
-    '`/products/${productId}`',
+    '/products/${productId}',
   ],
 
   productReviews: [
     'productReviewsPath',
     'productId: string',
-    '`/products/${productId}/reviews`',
+    '/products/${productId}/reviews',
   ],
 
   dashboard: [
     'dashboardPath',
     '',
-    '"/dashboard"',
+    '/dashboard',
   ],
 
   // @TODO: These two dashboard section tests show how two different paths
@@ -92,55 +92,55 @@ const routeFixtureToExpectedPartsMap = {
   dashboardSectionI: [
     'dashboardSectionPath',
     'section: string',
-    '`/dashboard/${section}`',
+    '/dashboard/${section}',
   ],
 
   dashboardSectionII: [
     'dashboardSectionPath',
     'sectionId: string',
-    '`/dashboard/sections/${sectionId}`',
+    '/dashboard/sections/${sectionId}',
   ],
 
   dashboardUser: [
     'dashboardUserPath',
     'userId: string',
-    '`/dashboard/users/${userId}`',
+    '/dashboard/users/${userId}',
   ],
 
   dashboardUserSettings: [
     'dashboardUserSettingsPath',
     'userId: string',
-    '`/dashboard/users/${userId}/settings`',
+    '/dashboard/users/${userId}/settings',
   ],
 
   dashboardProjectTaskEdit: [
     'dashboardProjectTaskEditPath',
     'projectId: string, taskId: string',
-    '`/dashboard/projects/${projectId}/tasks/${taskId}/edit`',
+    '/dashboard/projects/${projectId}/tasks/${taskId}/edit',
   ],
 
   dashboardSettingsTab: [
     'dashboardSettingPath',
     'settingTab: string',
-    '`/dashboard/settings/${settingTab}`',
+    '/dashboard/settings/${settingTab}',
   ],
 
   dashboardNotificationDetails: [
     'dashboardNotificationDetailsPath',
     'notificationId: string',
-    '`/dashboard/notifications/${notificationId}/details`',
+    '/dashboard/notifications/${notificationId}/details',
   ],
 
   dashboardAuditEventDetails: [
     'dashboardAuditEventIdDetailsPath',
     'eventId: string',
-    '`/dashboard/audit/${eventId}/details`',
+    '/dashboard/audit/${eventId}/details',
   ],
 
   dashboardTeamMemberPermissions: [
     'dashboardTeamMemberPermissionsPath',
     'teamId: string, memberId: string',
-    '`/dashboard/teams/${teamId}/members/${memberId}/permissions`',
+    '/dashboard/teams/${teamId}/members/${memberId}/permissions',
   ],
 }
 
