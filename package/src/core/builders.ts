@@ -100,7 +100,6 @@ export function buildHelperPath(route: IntegrationResolvedRoute): string {
 
   const dynamicParts: RoutePart[] = parts.filter((part) => part.dynamic)
   const processedParts: string[] = []
-  const hasParams = params.length > 0
 
   for (const part of parts) {
     if (part.dynamic) {
@@ -112,10 +111,7 @@ export function buildHelperPath(route: IntegrationResolvedRoute): string {
     }
   }
 
-  const quoteCharacter = hasParams ? "`" : '"'
-  const path = `/${processedParts.join("/")}`
-  const functionReturnStatement = `${quoteCharacter}${path}${quoteCharacter}`
-  return functionReturnStatement
+  return `/${processedParts.join("/")}`
 }
 
 /**

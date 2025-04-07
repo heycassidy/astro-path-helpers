@@ -15,13 +15,19 @@ export default function pathHelpers(
   options?: PathHelpersOptions,
 ): AstroIntegration {
   let helpersDir: URL
+  let addTrailingSlash = false
   const helperRoutes: HelperRouteMap = new Map()
 
   return {
     name: "astro-path-helpers",
     hooks: {
-      "astro:config:setup": async ({ createCodegenDir, updateConfig }) => {
+      "astro:config:setup": async ({
+        createCodegenDir,
+        updateConfig,
+        config,
+      }) => {
         helpersDir = createCodegenDir()
+        addTrailingSlash = config.trailingSlash === "always"
 
         updateConfig({
           vite: { plugins: [setupVirtualModule(helpersDir)] },
@@ -38,7 +44,7 @@ export default function pathHelpers(
           helperRoutes.set(route.pattern, route)
         }
 
-        const code = generatePathHelpers(helperRoutes)
+        const code = generatePathHelpers(helperRoutes, addTrailingSlash)
         const typeDeclarations = generateTypeDeclarations(helperRoutes)
 
         injectPathHelpers(code, helpersDir)
