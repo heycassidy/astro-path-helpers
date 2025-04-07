@@ -10,8 +10,8 @@ This is an [Astro integration](https://docs.astro.build/en/guides/integrations-g
 After setup, you'll have auto-generated type-safe path helpers available throughout your application. For example, with routes like:
 
 ```
-src/pages/posts/index.astro
-src/pages/posts/[slug].astro
+/pages/posts/index.astro
+/pages/posts/[slug].astro
 ```
 
 You can use these path helpers:
@@ -37,21 +37,16 @@ import { postsPath, postPath } from "astro-path-helpers";
 `/pages/products/categories/[id]` --> `productsCategoryPath(categoryId: string)
 `
 
-Notice that the parent resource is pluralized in the function name unless it has a following parameter.
+The parent resource is pluralized in the function name precedes a parameter.
 
 
 ### Namespaces
 When a path segment is singular, it is treated as a namespace rather than a resource, and we don't pluralize it in helper names:
 
-`/pages/role/members` --> `roleMembersPath()`
+`/role/members` --> `roleMembersPath()`
 
-Namespaces with a following parameter are treated as resources, but the parameter name is added to the helper name to avoid duplicate helper names:
+Path helpers are not generated for routes with a namespace that precedes a dynamic part. See the [Limitations](#limitations) section for more details.
 
-`/pages/role/[id]/members` --> `roleIdMembersPath(roleId: string)`
-
-Possible changes before 1.0.0:
-- The helper name may change to `membersPathForRole(roleId: string)`
-- Namespaces may be configurable in the integration config
 
 ## Limitations
 
@@ -60,7 +55,8 @@ Currently, `astro-path-helpers` has several limitations:
 - Only supports routes defined in the `/pages` directory
 - Does not support rest parameters in routes, e.g. `[...slug]`
 - Does not support multi-part segments in routes, e.g. `/pages/[zip]-[zap]`
-- Dynamic segments must be preceded by a static segment, e.g. `/pages/[zip]/[zap]` is not allowed because `[zap]` is preceded by the dynamic segment `[zip]`
+- Dynamic segments may not be preceded by another dynamic segment, e.g. `/pages/[zip]/[zap]` is not allowed because `[zap]` is preceded by the dynamic segment `[zip]`
+- Dynamic segments may not be preceded by a namespace segment. A namespace segment is currently defined as a segment that is static and singular. E.g. `/dashboard/[id]` is not allowed because dashboard is singular
 
 ## Roadmap
 
