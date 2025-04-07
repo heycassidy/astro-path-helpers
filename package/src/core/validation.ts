@@ -1,4 +1,6 @@
 import type { IntegrationResolvedRoute } from "astro"
+import { partIsNamespace } from "./util.ts"
+
 /**
  * Determines if a given route is supported for helper generation.
  *
@@ -30,11 +32,16 @@ export function isSupportedRoute(route: IntegrationResolvedRoute): boolean {
     return false
   }
 
-  // Reject routes that have a dynamic part preceded by another dynamic part
+  // 1. Reject routes that have a dynamic part preceded by another dynamic part
+  // 2. Reject routes that have a dynamic part preceded by a namespace part
   for (const [index, part] of parts.entries()) {
-    const isPrecededByDynamicPart = parts[index - 1]?.dynamic
+    const prevPart = parts[index - 1]
 
-    if (part.dynamic && isPrecededByDynamicPart) {
+    if (part.dynamic && prevPart && partIsNamespace(prevPart)) {
+      return false
+    }
+
+    if (part.dynamic && prevPart?.dynamic) {
       return false
     }
   }

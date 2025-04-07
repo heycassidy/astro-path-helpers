@@ -36,6 +36,12 @@ describe("isSupportedRoute", () => {
     expect(isSupportedRoute(routeFixtures.docsLangVersion)).toBe(false)
   })
 
+  it("rejects route with dynamic part after namespace part", () => {
+    expect(isSupportedRoute(routeFixtures.dashboardAuditEventDetails)).toBe(
+      false,
+    )
+  })
+
   it("accepts root route", () => {
     expect(isSupportedRoute(routeFixtures.root)).toBe(true)
   })

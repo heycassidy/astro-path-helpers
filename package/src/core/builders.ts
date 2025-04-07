@@ -1,6 +1,7 @@
 import type { IntegrationResolvedRoute, RoutePart } from "astro"
 import { camelCase, pascalCase } from "change-case"
 import { singularize } from "inflection"
+import { partIsNamespace } from "./util.ts"
 
 /**
  * Builds a string of the helper function name based on the route.
@@ -149,8 +150,7 @@ function getHelperParams(route: IntegrationResolvedRoute): string[] {
         index > 0 && !parts[index - 1].dynamic ? parts[index - 1] : undefined
 
       const prevStaticPartIsNamespace =
-        prevStaticPart &&
-        singularize(prevStaticPart.content) === prevStaticPart.content
+        prevStaticPart && partIsNamespace(prevStaticPart)
 
       let processedPart = ""
 
