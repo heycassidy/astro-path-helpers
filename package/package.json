@@ -1,6 +1,6 @@
 {
   "name": "astro-path-helpers",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Dynamic path helpers for Astro routes.",
   "author": {
     "email": "cassidy@cassidysmith.dev",
