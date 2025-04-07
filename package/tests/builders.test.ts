@@ -87,15 +87,7 @@ const routeFixtureToExpectedPartsMap = {
     '/dashboard',
   ],
 
-  // @TODO: These two dashboard section tests show how two different paths
-  // can still generate the same helper name
-  dashboardSectionI: [
-    'dashboardSectionPath',
-    'section: string',
-    '/dashboard/${section}',
-  ],
-
-  dashboardSectionII: [
+  dashboardSection: [
     'dashboardSectionPath',
     'sectionId: string',
     '/dashboard/sections/${sectionId}',
@@ -129,12 +121,6 @@ const routeFixtureToExpectedPartsMap = {
     'dashboardNotificationDetailsPath',
     'notificationId: string',
     '/dashboard/notifications/${notificationId}/details',
-  ],
-
-  dashboardAuditEventDetails: [
-    'dashboardAuditEventIdDetailsPath',
-    'eventId: string',
-    '/dashboard/audit/${eventId}/details',
   ],
 
   dashboardTeamMemberPermissions: [

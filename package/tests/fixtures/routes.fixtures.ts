@@ -212,15 +212,7 @@ export const routeFixtures = {
     segments: [[{ content: "dashboard", dynamic: false, spread: false }]],
   }),
 
-  dashboardSectionI: createMockRoute({
-    pattern: "/dashboard/[section]",
-    segments: [
-      [{ content: "dashboard", dynamic: false, spread: false }],
-      [{ content: "section", dynamic: true, spread: false }],
-    ],
-  }),
-
-  dashboardSectionII: createMockRoute({
+  dashboardSection: createMockRoute({
     pattern: "/dashboard/sections/[id]",
     segments: [
       [{ content: "dashboard", dynamic: false, spread: false }],
