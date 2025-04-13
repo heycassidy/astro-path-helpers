@@ -32,14 +32,9 @@ export function isSupportedRoute(route: IntegrationResolvedRoute): boolean {
     return false
   }
 
-  // 1. Reject routes that have a dynamic part preceded by another dynamic part
-  // 2. Reject routes that have a dynamic part preceded by a namespace part
+  // Reject routes that have a dynamic part preceded by another dynamic part
   for (const [index, part] of parts.entries()) {
     const prevPart = parts[index - 1]
-
-    if (part.dynamic && prevPart && partIsNamespace(prevPart)) {
-      return false
-    }
 
     if (part.dynamic && prevPart?.dynamic) {
       return false
