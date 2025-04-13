@@ -65,7 +65,11 @@ export default function pathHelpers(
       },
       "astro:config:done": ({ injectTypes }) => {
         const typeDeclarations = generateTypeDeclarations(templateContextStore)
-        injectPathHelpersTypeDeclarations(typeDeclarations, helpersDir)
+        injectPathHelpersTypeDeclarations(
+          typeDeclarations,
+          helpersDir,
+          injectTypes,
+        )
       },
     },
   }
