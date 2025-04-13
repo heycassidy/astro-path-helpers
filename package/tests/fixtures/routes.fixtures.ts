@@ -207,6 +207,14 @@ export const routeFixtures = {
     ],
   }),
 
+  productsCategories: createMockRoute({
+    pattern: "/products/categories",
+    segments: [
+      [{ content: "products", dynamic: false, spread: false }],
+      [{ content: "categories", dynamic: false, spread: false }],
+    ],
+  }),
+
   dashboard: createMockRoute({
     pattern: "/dashboard",
     segments: [[{ content: "dashboard", dynamic: false, spread: false }]],
