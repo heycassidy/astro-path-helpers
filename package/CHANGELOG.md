@@ -1,5 +1,11 @@
 # astro-path-helpers
 
+## 0.3.1
+
+### Patch Changes
+
+- [#10](https://github.com/heycassidy/astro-path-helpers/pull/10) [`eafd96c`](https://github.com/heycassidy/astro-path-helpers/commit/eafd96c62211f0b4119740a7d04ed5500de1ee5d) Thanks [@heycassidy](https://github.com/heycassidy)! - Fix incorrect usage instruction in README
+
 ## 0.3.0
 
 ### Minor Changes
