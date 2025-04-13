@@ -1,1 +1,1 @@
-./package/astro-path-helpers/README.md
+package/README.md
