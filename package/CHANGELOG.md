@@ -1,5 +1,69 @@
 # astro-path-helpers
 
+## 0.3.0
+
+### Minor Changes
+
+- [#8](https://github.com/heycassidy/astro-path-helpers/pull/8) [`f56d367`](https://github.com/heycassidy/astro-path-helpers/commit/f56d3671b418e303070c8eafe8c69a8feba8a468) Thanks [@heycassidy](https://github.com/heycassidy)! - Enables support for routes with a dynamic part immediately after a namespace part
+
+  For example, in this route, `dashboard` is a namespace part since it's singular:
+
+  `/pages/dashboard/[id]`
+
+  This was previously unsupported because of the potential for different routes to generate path helpers with the same name.
+  For example, these two routes will generate path helpers with the same name, `dashboardSectionPath`:
+
+  1. `/pages/dashboard/sections/[sectionId]`
+  2. `/pages/dashboard/[section]`
+
+  Only one will be present in the generated code to avoid duplicate identifiers. In case of a conflict like this, it is recommended to rename one of the parameters. For example: change the second route to `/pages/dashboard/[id]`.
+
+  These are the resulting path helper names:
+
+  1. `/pages/dashboard/sections/[sectionId]` --> `dashboardSectionPath`
+  2. `/pages/dashboard/[id]` --> `dashboardIdPath`
+
+  Now there is no conflict.
+
+- [#8](https://github.com/heycassidy/astro-path-helpers/pull/8) [`9743a7d`](https://github.com/heycassidy/astro-path-helpers/commit/9743a7d43004d852575478d116884485b101405f) Thanks [@heycassidy](https://github.com/heycassidy)! - Adds global helper template context store
+
+  This change ensures that it's impossible for multiple helpers with the same function name to appear in the generated code. If one already exists it will get overwritten.
+
+  For example, these two paths would generate helpers with the same name, `dashboardSectionPath`:
+
+  1. /pages/dashboard/sections/[sectionId]
+  2. /pages/dashboard/[section]
+
+  After this change, only one instance of `dashboardSectionPath` appears in the generated output. This is essential since duplicated identifiers are not allowed.
+
+  This change also anticipates future config-based path helper generation, which will override helper auto-generated from Astro routes
+
+- [#8](https://github.com/heycassidy/astro-path-helpers/pull/8) [`b2dc388`](https://github.com/heycassidy/astro-path-helpers/commit/b2dc388924df029f575f2ce90082f58b8ff01517) Thanks [@heycassidy](https://github.com/heycassidy)! - **Breaking** Restructure package exports so that the integration setup function is exported from the index/root of the package.
+
+  This changes fixes an issue where package exports do not match the structure expected by `astro add astro-path-helpers`. It is not currently possible for integrations to configure `astro add` behavior, so we instead conform to `astro add` by moving the integration setup function to the index.
+
+  Please update your imports as follows:
+
+  astro.config.mts
+
+  ```diff
+  -import pathHelpers from "astro-path-helpers/integration"
+  +import pathHelpers from "astro-path-helpers"
+  ```
+
+  All path helper imports must be updated. (Sorry, but we're still before 1.0.0!)
+
+  MyComponent.astro
+
+  ```diff
+  -import { blogPostPath } from "astro-path-helpers"
+  +import { blogPostPath } from "astro-path-helpers/generated"
+  ```
+
+### Patch Changes
+
+- [#8](https://github.com/heycassidy/astro-path-helpers/pull/8) [`369714c`](https://github.com/heycassidy/astro-path-helpers/commit/369714cd7465bf8f8452c70587b644da3319846d) Thanks [@heycassidy](https://github.com/heycassidy)! - Fixes issue where client app wouldn't get types for path helpers
+
 ## 0.2.0
 
 ### Minor Changes
