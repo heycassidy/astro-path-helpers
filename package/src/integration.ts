@@ -9,6 +9,7 @@ import {
   injectPathHelpersTypeDeclarations,
 } from "./core/inject.ts"
 import type {
+  CodegenFileName,
   HelperTemplateContext,
   HelperTemplateContextStore,
   PathHelpersOptions,
@@ -19,6 +20,8 @@ import { setupVirtualModule } from "./vite/plugin.ts"
 export default function pathHelpers(
   options?: PathHelpersOptions,
 ): AstroIntegration {
+  const CODEGEN_FILENAME: CodegenFileName = "generated"
+
   const templateContextStore: HelperTemplateContextStore = new Map()
   let helpersDir: URL
   let addTrailingSlash = false
@@ -35,7 +38,7 @@ export default function pathHelpers(
         addTrailingSlash = config.trailingSlash === "always"
 
         updateConfig({
-          vite: { plugins: [setupVirtualModule(helpersDir)] },
+          vite: { plugins: [setupVirtualModule(helpersDir, CODEGEN_FILENAME)] },
         })
       },
       "astro:routes:resolved": async ({ routes }) => {
@@ -60,14 +63,19 @@ export default function pathHelpers(
         const code = generatePathHelpers(templateContextStore, addTrailingSlash)
         const typeDeclarations = generateTypeDeclarations(templateContextStore)
 
-        injectPathHelpers(code, helpersDir)
-        injectPathHelpersTypeDeclarations(typeDeclarations, helpersDir)
+        injectPathHelpers(code, helpersDir, CODEGEN_FILENAME)
+        injectPathHelpersTypeDeclarations(
+          typeDeclarations,
+          helpersDir,
+          CODEGEN_FILENAME,
+        )
       },
       "astro:config:done": ({ injectTypes }) => {
         const typeDeclarations = generateTypeDeclarations(templateContextStore)
         injectPathHelpersTypeDeclarations(
           typeDeclarations,
           helpersDir,
+          CODEGEN_FILENAME,
           injectTypes,
         )
       },

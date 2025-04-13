@@ -10,3 +10,5 @@ export type HelperTemplateContext = {
 }
 
 export type HelperTemplateContextStore = Map<string, HelperTemplateContext>
+
+export type CodegenFileName = "generated"

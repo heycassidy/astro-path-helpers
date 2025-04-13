@@ -1,16 +1,18 @@
 import { writeFileSync } from "node:fs"
 import type { InjectedType } from "astro"
+import type { CodegenFileName } from "./types.ts"
 
 export function injectPathHelpersTypeDeclarations(
   typeDeclarations: string,
   dir: URL,
+  fileName: CodegenFileName,
   injectTypes?: (injectedType: InjectedType) => URL,
 ) {
-  const typeDeclarationsPath = new URL("generated.d.ts", dir)
+  const typeDeclarationsPath = new URL(`${fileName}.d.ts`, dir)
 
   if (injectTypes) {
     injectTypes({
-      filename: "generated.d.ts",
+      filename: `${fileName}.d.ts`,
       content: typeDeclarations,
     })
   } else {
@@ -18,7 +20,11 @@ export function injectPathHelpersTypeDeclarations(
   }
 }
 
-export function injectPathHelpers(code: string, dir: URL) {
-  const codePath = new URL("generated.ts", dir)
+export function injectPathHelpers(
+  code: string,
+  dir: URL,
+  fileName: CodegenFileName,
+) {
+  const codePath = new URL(`${fileName}.ts`, dir)
   writeFileSync(codePath, code, "utf-8")
 }
