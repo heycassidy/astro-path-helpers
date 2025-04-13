@@ -1,4 +1,5 @@
-import type { AstroIntegration } from "astro"
+import type { AstroIntegration, IntegrationResolvedRoute } from "astro"
+import { createTemplateContext } from "./core/builders.ts"
 import {
   generatePathHelpers,
   generateTypeDeclarations,
@@ -7,16 +8,23 @@ import {
   injectPathHelpers,
   injectPathHelpersTypeDeclarations,
 } from "./core/inject.ts"
-import type { HelperRouteMap, PathHelpersOptions } from "./core/types.js"
+import type {
+  CodegenFileName,
+  HelperTemplateContext,
+  HelperTemplateContextStore,
+  PathHelpersOptions,
+} from "./core/types.js"
 import { isSupportedRoute } from "./core/validation.ts"
 import { setupVirtualModule } from "./vite/plugin.ts"
 
 export default function pathHelpers(
   options?: PathHelpersOptions,
 ): AstroIntegration {
+  const CODEGEN_FILENAME: CodegenFileName = "generated"
+
+  const templateContextStore: HelperTemplateContextStore = new Map()
   let helpersDir: URL
   let addTrailingSlash = false
-  const helperRoutes: HelperRouteMap = new Map()
 
   return {
     name: "astro-path-helpers",
@@ -30,29 +38,46 @@ export default function pathHelpers(
         addTrailingSlash = config.trailingSlash === "always"
 
         updateConfig({
-          vite: { plugins: [setupVirtualModule(helpersDir)] },
+          vite: { plugins: [setupVirtualModule(helpersDir, CODEGEN_FILENAME)] },
         })
       },
       "astro:routes:resolved": async ({ routes }) => {
-        helperRoutes.clear()
+        templateContextStore.clear()
 
+        // Process Astro Routes
         for (const route of routes) {
           if (!isSupportedRoute(route)) {
             continue // Silently skip unsupported routes
           }
 
-          helperRoutes.set(route.pattern, route)
+          const routeTemplateContext: HelperTemplateContext =
+            createTemplateContext(route)
+
+          // Use the helper name as the key to avoid duplicate helpers
+          templateContextStore.set(
+            routeTemplateContext.name,
+            routeTemplateContext,
+          )
         }
 
-        const code = generatePathHelpers(helperRoutes, addTrailingSlash)
-        const typeDeclarations = generateTypeDeclarations(helperRoutes)
+        const code = generatePathHelpers(templateContextStore, addTrailingSlash)
+        const typeDeclarations = generateTypeDeclarations(templateContextStore)
 
-        injectPathHelpers(code, helpersDir)
-        injectPathHelpersTypeDeclarations(typeDeclarations, helpersDir)
+        injectPathHelpers(code, helpersDir, CODEGEN_FILENAME)
+        injectPathHelpersTypeDeclarations(
+          typeDeclarations,
+          helpersDir,
+          CODEGEN_FILENAME,
+        )
       },
       "astro:config:done": ({ injectTypes }) => {
-        const typeDeclarations = generateTypeDeclarations(helperRoutes)
-        injectPathHelpersTypeDeclarations(typeDeclarations, helpersDir)
+        const typeDeclarations = generateTypeDeclarations(templateContextStore)
+        injectPathHelpersTypeDeclarations(
+          typeDeclarations,
+          helpersDir,
+          CODEGEN_FILENAME,
+          injectTypes,
+        )
       },
     },
   }

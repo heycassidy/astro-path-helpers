@@ -1,6 +1,7 @@
 import type { IntegrationResolvedRoute, RoutePart } from "astro"
 import { camelCase, pascalCase } from "change-case"
 import { singularize } from "inflection"
+import type { HelperTemplateContext } from "./types.ts"
 import { partIsNamespace } from "./util.ts"
 
 /**
@@ -177,4 +178,25 @@ function getHelperParams(route: IntegrationResolvedRoute): string[] {
   }
 
   return processedParts
+}
+
+/**
+ * Retrieves the components needed to generate a route helper function.
+ *
+ * This function returns an object containing:
+ * 1. name: The helper name (e.g. "userPath")
+ * 2. params: The helper parameter list (e.g. "userId: string")
+ * 3. path: The dynamic path that the helper will return (e.g. "`/users/${userId}`")
+ *
+ * @param {IntegrationResolvedRoute} route - The route to generate helper parts for
+ * @returns {HelperTemplateContext} Object containing the helper function name, parameters, and path generation code
+ */
+export function createTemplateContext(
+  route: IntegrationResolvedRoute,
+): HelperTemplateContext {
+  return {
+    name: buildHelperName(route),
+    params: buildHelperParams(route),
+    path: buildHelperPath(route),
+  }
 }

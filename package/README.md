@@ -1,20 +1,86 @@
-# `astro-path-helpers`
+# Astro Path Helpers
 
-> ⚠️ This integration is still under active development and breaking changes should be expected at any point until version 1.0.0.
+This [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) generates type-safe path helper functions for your [Astro](https://astro.build/) routes.
 
-This is an [Astro integration](https://docs.astro.build/en/guides/integrations-guide/) that generates type-safe path helper functions for your Astro routes, making it easy to manage and reference nested routes in your application.
+- <strong>[Why Astro Path Helpers](#why-astro-path-helpers)</strong>
+- <strong>[Installation](#installation)</strong>
+- <strong>[Usage](#usage)</strong>
+- <strong>[Configuration](#configuration)</strong>
+- <strong>[Examples](#examples)</strong>
+- <strong>[Limitations](#limitations)</strong>
+- <strong>[Roadmap](#roadmap)</strong>
+- <strong>[Changelog](#changelog)</strong>
 
+## Why Astro Path Helpers
+
+When building content-oriented sites, you frequently need to link between pages. Standard Astro doesn't provide a type-safe method for this, leaving you with plain text paths that are prone to typos and difficult to maintain when route structures change.
+
+Astro Path Helpers solves this problem by automatically generating a named type-safe, helper function for each route in your project.
+
+For example, instead of writing:
+```astro
+<a href="/posts/my-post">My Post</a>
+```
+
+You can use the generated helper:
+```astro
+<a href={postPath('my-post')}>My Post</a>
+```
+
+## Installation
+
+### Quick Install
+
+Run the `astro add` command below with your package manager of choice and follow the prompts:
+
+```sh
+# Using PNPM
+pnpm astro add astro-path-helpers
+# Using NPM
+npx astro add astro-path-helpers
+# Using Yarn
+yarn astro add astro-path-helpers
+```
+
+### Manual Install
+
+First, install the `astro-path-helpers` package using your package manager:
+
+```sh
+# Using PNPM
+pnpm add astro-path-helpers
+# Using NPM
+npm install astro-path-helpers
+# Using Yarn
+yarn add astro-path-helpers
+```
+
+Second, add the integration to your `astro.config.*` file:
+
+**`astro.config.mjs`**
+
+```diff
+ import { defineConfig } from "astro/config";
++import pathHelpers from "astro-path-helpers";
+
+ export default defineConfig({
+   integrations: [
+     // ...other integrations
++     pathHelpers()
+   ],
+ });
+```
 
 ## Usage
 
-After setup, you'll have auto-generated type-safe path helpers available throughout your application. For example, with routes like:
+After setup, you'll have auto-generated type-safe path helpers available to import throughout your application. For example, if you have these routes
 
 ```
-/pages/posts/index.astro
+/pages/posts.astro
 /pages/posts/[slug].astro
 ```
 
-You can use these path helpers:
+Then you'll have path helpers available:
 
 ```astro
 ---
@@ -25,43 +91,77 @@ import { postsPath, postPath } from "astro-path-helpers";
 <a href={postPath("my-first-post")}>Read my first post</a>
 ```
 
+
+## Configuration
+
+Astro Path Helpers has no configuration options yet. Path helpers are generated automatically based on your routes.
+
+
 ## Examples
 
-### Nested Resources
-`/pages/products/[id]/categories` --> `productCategoriesPath(productId: string)`
+### Resources
 
-`/pages/products/[id]/categories/[id]` --> `productCategoryPath(productId: string, categoryId: string)`
+When a path segment is plural, it is considered a resource segment. Path helpers are generated for deeply nested resources.
 
-`/pages/products/categories` --> `productsCategoriesPath()`
+**Route:** `/pages/products.astro`\
+**Helper:** `productsPath()`
 
-`/pages/products/categories/[id]` --> `productsCategoryPath(categoryId: string)
-`
+**Route:** `/pages/products/[id].astro`\
+**Helper:** `productPath(productId: string)`
 
-The parent resource is pluralized in the function name precedes a parameter.
+**Route:** `/pages/products/[id]/categories.astro`\
+**Helper:** `productCategoriesPath(productId: string)`
+
+**Route:** `/pages/products/[id]/categories/[id].astro`\
+**Helper:** `productCategoryPath(productId: string, categoryId: string)`
+
+**Route:** `/pages/products/categories.astro`\
+**Helper:** `productsCategoriesPath()`
+
+**Route:** `/pages/products/categories/[id].astro`\
+**Helper:** `productsCategoryPath(categoryId: string)`
+
+Notice the resource name is singularized in the helper name when it precedes a parameter.
 
 
 ### Namespaces
-When a path segment is singular, it is treated as a namespace rather than a resource, and we don't pluralize it in helper names:
 
-`/role/members` --> `roleMembersPath()`
+When a path segment is singular, it is treated as a namespace rather than a resource, and we don't ever pluralize it in helper names:
 
-Path helpers are not generated for routes with a namespace that precedes a dynamic part. See the [Limitations](#limitations) section for more details.
+In this example, "role" is a namespace segment, and "members" is a resource segment:
+
+**Route:** `/role/members.astro`\
+**Helper:** `roleMembersPath()`
+
+Sometimes you might have a dynamic segment after a namespace segment. Unlike resource routes, the path helper name will contain the parameter:
+
+**Route:** `/dashboard/[id].astro`\
+**Helper:** `dashboardIdPath(id: string)`
+
+### Path Helper Conflicts
+
+It is possible for two different routes to generate helpers with the same name. For example, these two routes would generate path helpers with the same name, `dashboardSectionPath`:
+
+1. `/pages/dashboard/sections/[sectionId].astro`\
+2. `/pages/dashboard/[section].astro`
+
+Only one will be present in the generated code to avoid duplicate identifiers. It is recommended to rename one of the parameters so that you get path helpers for both routes. For example: change the second route to `/pages/dashboard/[id].astro` to change its path helper to `dashboardIdPath(id: string)`.
 
 
 ## Limitations
 
-Currently, `astro-path-helpers` has several limitations:
+Currently, Astro Path Helpers has several limitations:
 
 - Only supports routes defined in the `/pages` directory
 - Does not support rest parameters in routes, e.g. `[...slug]`
 - Does not support multi-part segments in routes, e.g. `/pages/[zip]-[zap]`
 - Dynamic segments may not be preceded by another dynamic segment, e.g. `/pages/[zip]/[zap]` is not allowed because `[zap]` is preceded by the dynamic segment `[zip]`
-- Dynamic segments may not be preceded by a namespace segment. A namespace segment is currently defined as a segment that is static and singular. E.g. `/dashboard/[id]` is not allowed because dashboard is singular
 
 ## Roadmap
 
 These are possible features in future releases:
 
+- [ ] Configuration options
 - [ ] Custom path helpers via the integration config
 - [ ] Override auto-generated path helper names via the integration config
 - [ ] Support for [Endpoints](https://docs.astro.build/en/guides/endpoints/#server-endpoints-api-routes)
@@ -70,79 +170,8 @@ These are possible features in future releases:
 - [ ] Support for dynamic segments preceded by another dynamic segment, e.g. `/pages/products/[id]/[variant]` --> `productVariantPath(productId, variantId)`
 - [ ] Custom rules and overrides for route name singularization and pluralization
 
-I'd love to hear your ideas! Have a feature you'd like to see in `astro-path-helpers`? Please reach out and share your suggestions - community feedback helps make this integration better for everyone!
+I'd love to hear your ideas! Have a feature you'd like to see? Please reach out and share your suggestions - community feedback helps make this integration better for everyone!
 
+## Changelog
 
-## Installation
-
-Install the integration **automatically** using the Astro CLI:
-
-```bash
-pnpm astro add astro-path-helpers
-```
-
-```bash
-npx astro add astro-path-helpers
-```
-
-```bash
-yarn astro add astro-path-helpers
-```
-
-Or install it **manually**:
-
-1. Install the required dependencies
-
-```bash
-pnpm add astro-path-helpers
-```
-
-```bash
-npm install astro-path-helpers
-```
-
-```bash
-yarn add astro-path-helpers
-```
-
-2. Add the integration to your astro config
-
-```diff
-+import pathHelpers from "astro-path-helpers/integration";
-
-export default defineConfig({
-  integrations: [
-+    pathHelpers(),
-  ],
-});
-```
-
-## Contributing
-
-This package is structured as a monorepo:
-
-- `playground` contains code for testing the package
-- `package` contains the actual package
-
-Install dependencies using pnpm:
-
-```bash
-pnpm i --frozen-lockfile
-```
-
-Start the playground and package watcher:
-
-```bash
-pnpm dev
-```
-
-You can now edit files in `package`. Please note that making changes to those files may require restarting the playground dev server.
-
-## Licensing
-
-[MIT Licensed](https://github.com/cassidysmith/astro-path-helpers/blob/main/LICENSE). Made with ❤️ by [Cassidy Smith](https://github.com/cassidysmith).
-
-## Acknowledgements
-
-- Created using [astro-integration-template](https://github.com/florian-lefebvre/astro-integration-template).
-- Uses [inflection](https://www.npmjs.com/package/inflection) for handling singular/plural forms.
+See [CHANGELOG.md](CHANGELOG.md) for a history of changes to this integration.

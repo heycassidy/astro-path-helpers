@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url"
+import type { CodegenFileName } from "../core/types.ts"
 
-export function setupVirtualModule(helpersDir: URL) {
+export function setupVirtualModule(helpersDir: URL, fileName: CodegenFileName) {
   const virtualModuleId = "virtual:astro-path-helpers"
   const resolvedVirtualModuleId = `\0${virtualModuleId}`
 
@@ -13,7 +14,9 @@ export function setupVirtualModule(helpersDir: URL) {
     },
     load(id: string) {
       if (id === resolvedVirtualModuleId) {
-        const generatedPath = fileURLToPath(new URL("generated.ts", helpersDir))
+        const generatedPath = fileURLToPath(
+          new URL(`${fileName}.ts`, helpersDir),
+        )
         return `export * from "${generatedPath}";`
       }
     },

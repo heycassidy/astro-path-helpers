@@ -81,6 +81,12 @@ const routeFixtureToExpectedPartsMap = {
     '/products/${productId}/reviews',
   ],
 
+  productsCategories: [
+    'productsCategoriesPath',
+    '',
+    '/products/categories'
+  ],
+
   dashboard: [
     'dashboardPath',
     '',

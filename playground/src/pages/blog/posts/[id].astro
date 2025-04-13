@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content"
-import { postPath, postsPath } from "astro-path-helpers"
+import { blogPostsPath } from "astro-path-helpers/generated"
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
   return posts.map((post) => ({
@@ -11,4 +11,4 @@ export async function getStaticPaths() {
 const { post } = Astro.props
 ---
 <h1>{post.data.title}</h1>
-<a href={postsPath()}>All Posts</a>
+<a href={blogPostsPath()}>All Posts</a>
