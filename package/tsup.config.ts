@@ -4,7 +4,10 @@ import { peerDependencies } from "./package.json"
 export default defineConfig((options) => {
   const dev = !!options.watch
   return {
-    entry: ["src/**/*.(ts|js)"],
+    entry: {
+      index: "src/index.ts",
+      generated: "src/generated.ts",
+    },
     format: ["esm"],
     dts: true,
     sourcemap: true,

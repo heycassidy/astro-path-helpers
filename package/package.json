@@ -30,9 +30,9 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./integration": {
-      "import": "./dist/integration.js",
-      "types": "./dist/integration.d.ts"
+    "./generated": {
+      "import": "./dist/generated.js",
+      "types": "./dist/generated.d.ts"
     }
   },
   "files": ["dist"],
