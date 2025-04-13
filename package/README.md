@@ -84,7 +84,7 @@ Then you'll have path helpers available:
 
 ```astro
 ---
-import { postsPath, postPath } from "astro-path-helpers";
+import { postsPath, postPath } from "astro-path-helpers/generated";
 ---
 
 <a href={postsPath()}>View all posts</a>
