@@ -1,5 +1,12 @@
 # astro-path-helpers
 
+## 0.4.0
+
+### Minor Changes
+
+- [#12](https://github.com/heycassidy/astro-path-helpers/pull/12) [`62849ca`](https://github.com/heycassidy/astro-path-helpers/commit/62849ca0ffb044b27de6c808fd736e1c86d62dfc) Thanks [@heycassidy](https://github.com/heycassidy)! - - Adds support for multi-part segments, e.g. `/docs/[lang]/[version]`
+  - Adds support for consecutive dynamic params, e.g. `/pages/products/[id]/[variant]`. Consecutive dynamic params must be unique, `/pages/products/[id]/[id]` is not supported.
+
 ## 0.3.1
 
 ### Patch Changes
