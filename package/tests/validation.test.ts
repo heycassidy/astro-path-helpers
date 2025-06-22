@@ -29,7 +29,7 @@ describe("isSupportedRoute", () => {
   })
 
   it("rejects route with a dynamic part preceded by another identical dynamic part", () => {
-    expect(isSupportedRoute(routeFixtures.duplicateSequentialParams)).toBe(
+    expect(isSupportedRoute(routeFixtures.duplicateConsecutiveParams)).toBe(
       false,
     )
   })
@@ -50,7 +50,7 @@ describe("isSupportedRoute", () => {
     expect(isSupportedRoute(routeFixtures.dateRangeMultiPart)).toBe(true)
   })
 
-  it("accepts route with sequential dynamic parts", () => {
+  it("accepts route with consecutive dynamic parts", () => {
     expect(isSupportedRoute(routeFixtures.docsLangVersion)).toBe(true)
   })
 

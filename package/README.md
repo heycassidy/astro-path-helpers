@@ -138,6 +138,17 @@ Sometimes you might have a dynamic segment after a namespace segment. Unlike res
 **Route:** `/dashboard/[id].astro`\
 **Helper:** `dashboardIdPath(id: string)`
 
+### Other Examples
+
+#### Multi-part Segments
+**Route:** `/reports/[startDate]-to-[endDate]`\
+**Helper:** `reportPath(startDate: string, endDate: string)`
+
+#### Sequential parameters
+**Route:** `/docs/[lang]/[version]`\
+**Helper:** `docPath(lang: string, version: string)`\
+Note: Consecutive parameters must be unique. E.g. `/product/[id]/[id]` will not generate a path helper.
+
 ### Path Helper Conflicts
 
 It is possible for two different routes to generate helpers with the same name. For example, these two routes would generate path helpers with the same name, `dashboardSectionPath`:
@@ -165,7 +176,7 @@ These are possible features in future releases:
 - [ ] Support for [Endpoints](https://docs.astro.build/en/guides/endpoints/#server-endpoints-api-routes)
 - [ ] Support for rest parameters, e.g. /pages/books/[...slug]
 - [x] Support for multi-part segments
-- [x] Support for dynamic segments preceded by another dynamic segment, e.g. `/pages/products/[id]/[variant]` --> `productVariantPath(productId, variantId)`
+- [x] Support for consecutive dynamic parts, e.g. `/pages/products/[id]/[variant]` --> `productPath(id, variant)`
 - [ ] Custom rules and overrides for route name singularization and pluralization
 
 I'd love to hear your ideas! Have a feature you'd like to see? Please reach out and share your suggestions - community feedback helps make this integration better for everyone!

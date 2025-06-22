@@ -8,7 +8,7 @@ import type { IntegrationResolvedRoute } from "astro"
  * - Only project page routes are supported
  * - Routes with rest parameters are not supported
  * - Multi-part segments are not supported
- * - Sequential dynamic parts are not supported
+ * - Consecutive dynamic parts are not supported
  *
  * @param {IntegrationResolvedRoute} route - The resolved route to check.
  * @returns {boolean} True if the route is supported; otherwise false.
@@ -38,7 +38,7 @@ export function isSupportedRoute(route: IntegrationResolvedRoute): boolean {
       part.content === prevPart.content
     ) {
       console.warn(
-        "Astro Path Helpers: Sequential duplicate params are not supported.",
+        "Astro Path Helpers: Consecutive duplicate params are not supported.",
       )
       return false
     }

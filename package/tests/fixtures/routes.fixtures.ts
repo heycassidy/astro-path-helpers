@@ -107,7 +107,7 @@ export const routeFixtures = {
     ],
   }),
 
-  duplicateSequentialParams: createMockRoute({
+  duplicateConsecutiveParams: createMockRoute({
     pattern: "/[id]/[id]",
     segments: [
       [{ content: "id", dynamic: true, spread: false }],
@@ -221,6 +221,18 @@ export const routeFixtures = {
     ],
   }),
 
+  productVariantDetail: createMockRoute({
+    pattern: "/products/[id]-[variant]",
+    segments: [
+      [{ content: "products", dynamic: false, spread: false }],
+      [
+        { content: "id", dynamic: true, spread: false },
+        { content: "-", dynamic: false, spread: false },
+        { content: "variant", dynamic: true, spread: false },
+      ],
+    ],
+  }),
+
   productCategoriesSpread: createMockRoute({
     pattern: "products/[...categories]",
     segments: [
@@ -297,13 +309,13 @@ export const routeFixtures = {
   }),
 
   dashboardProjectTaskEdit: createMockRoute({
-    pattern: "/dashboard/projects/[projectId]/tasks/[taskId]/edit",
+    pattern: "/dashboard/projects/[id]/tasks/[id]/edit",
     segments: [
       [{ content: "dashboard", dynamic: false, spread: false }],
       [{ content: "projects", dynamic: false, spread: false }],
-      [{ content: "projectId", dynamic: true, spread: false }],
+      [{ content: "id", dynamic: true, spread: false }],
       [{ content: "tasks", dynamic: false, spread: false }],
-      [{ content: "taskId", dynamic: true, spread: false }],
+      [{ content: "id", dynamic: true, spread: false }],
       [{ content: "edit", dynamic: false, spread: false }],
     ],
   }),

@@ -81,6 +81,12 @@ const routeFixtureToExpectedPartsMap = {
     '/products/${productId}',
   ],
 
+  productVariantDetail: [
+    'productPath',
+    'id: string, variant: string',
+    '/products/${id}-${variant}',
+  ],
+
   productReviews: [
     'productReviewsPath',
     'productId: string',

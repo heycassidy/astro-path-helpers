@@ -175,7 +175,8 @@ function getHelperParams(route: IntegrationResolvedRoute): string[] {
             singularize(normalizeSegment(prevStaticSegment).toLowerCase()),
           )
 
-      // Prepend the previous static segment content to the param if a bunch of conditions are true:
+      // Prepend the previous static segment content to the param if a bunch of conditions are true.
+      // e.g. the param name for `/users/[id]` is `userId`
       if (
         // 1. This segment must follow a static segment
         prevStaticSegment &&
