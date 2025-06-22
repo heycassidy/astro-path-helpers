@@ -1,8 +1,12 @@
 import type { IntegrationResolvedRoute, RoutePart } from "astro"
-import { camelCase, pascalCase } from "change-case"
-import { singularize } from "inflection"
+import { camelize, singularize } from "inflection"
 import type { HelperTemplateContext } from "./types.ts"
-import { partIsNamespace } from "./util.ts"
+import {
+  isDynamicSegment,
+  isNamespaceSegment,
+  isStaticSegment,
+  normalizeSegment,
+} from "./util.ts"
 
 /**
  * Builds a string of the helper function name based on the route.
@@ -18,59 +22,61 @@ import { partIsNamespace } from "./util.ts"
  * @returns {string} The generated helper function name.
  */
 export function buildHelperName(route: IntegrationResolvedRoute): string {
-  const parts = route.segments.flat()
+  const segments = route.segments
+  const parts = segments.flat()
 
-  const isRootPath = parts.length === 0
-  const isRootDynamicPath = parts.length === 1 && parts[0].dynamic
-
-  if (isRootPath) {
+  if (parts.length === 0) {
     return "rootPath"
   }
 
-  if (isRootDynamicPath) {
-    return camelCase(`root_${parts[0].content}`)
+  if (segments.length === 1 && isDynamicSegment(segments[0])) {
+    return ["root", normalizeSegment(segments[0], false), "Path"].join("")
   }
 
-  let functionName = ""
-  let staticPartsCounter = 0
-  let dynamicPartsCounter = 0
+  let helperNameParts = ""
 
-  for (const [index, part] of parts.entries()) {
-    part.dynamic ? dynamicPartsCounter++ : staticPartsCounter++
+  for (const [i, segment] of segments.entries()) {
+    const nextSegment =
+      (i < segments.length - 1 && segments[i + 1]) || undefined
 
-    if (part.dynamic) {
+    let currentSegmentName = normalizeSegment(segment)
+
+    if (isDynamicSegment(segment)) {
       continue
     }
-
-    const nextPart = (index < parts.length - 1 && parts[index + 1]) || undefined
-
-    // @TODO: let users configure namespaces
-    // Right now, we just assume it's a namespace if it's singular
-    const isNamespacePart =
-      !part.dynamic && singularize(part.content) === part.content
-
-    // normalize parts, replace non-alpha characters with an underscore
-    // so we can easily camelCase it later
-    let functionNamePart = part.content.replace(/[^a-zA-Z]/g, "_")
 
     // Usually, you expect namespace parts to precede a static part, BUT
     // For namespace parts which precede a parameter,
     // we need to add the param to the function name
     // to avoid duplicate helper names
     //
-    if (isNamespacePart && nextPart?.dynamic) {
-      functionNamePart = `${functionNamePart}_${camelCase(nextPart.content)}`
+    if (
+      isNamespaceSegment(segment) &&
+      nextSegment &&
+      isDynamicSegment(nextSegment)
+    ) {
+      currentSegmentName = [
+        currentSegmentName,
+        normalizeSegment(nextSegment),
+      ].join("_")
     }
 
-    // Resource part (plural)
-    if (!isNamespacePart && nextPart?.dynamic) {
-      functionNamePart = singularize(functionNamePart)
+    if (
+      !isNamespaceSegment(segment) &&
+      isStaticSegment(segment) &&
+      nextSegment &&
+      isDynamicSegment(nextSegment)
+    ) {
+      currentSegmentName = singularize(currentSegmentName)
     }
 
-    // append the function name part
-    functionName = `${functionName}_${functionNamePart}`
+    helperNameParts = [helperNameParts, currentSegmentName]
+      .filter(Boolean)
+      .join("_")
   }
-  functionName = camelCase(`${functionName}_path`)
+
+  const functionName = camelize(`${helperNameParts}_path`, true)
+
   return functionName
 }
 
@@ -96,81 +102,96 @@ export function buildHelperParams(route: IntegrationResolvedRoute): string {
  * @returns {string} The formatted return statement for the helper function.
  */
 export function buildHelperPath(route: IntegrationResolvedRoute): string {
-  const parts = route.segments.flat()
+  const segments = route.segments
+  const parts = segments.flat()
   const params = getHelperParams(route)
 
   const dynamicParts: RoutePart[] = parts.filter((part) => part.dynamic)
-  const processedParts: string[] = []
 
-  for (const part of parts) {
-    if (part.dynamic) {
-      const dynamicPartIndex = dynamicParts.indexOf(part)
+  const processedSegments: string[] = []
 
-      processedParts.push(`\$\{${params[dynamicPartIndex]}\}`)
-    } else {
-      processedParts.push(part.content)
+  for (const [i, segment] of segments.entries()) {
+    const processedParts: string[] = []
+
+    for (const [_, part] of segment.entries()) {
+      if (part.dynamic) {
+        const dynamicPartIndex = dynamicParts.indexOf(part)
+
+        processedParts.push(`\$\{${params[dynamicPartIndex]}\}`)
+      } else {
+        processedParts.push(part.content)
+      }
     }
+
+    processedSegments.push(processedParts.join(""))
   }
 
-  return `/${processedParts.join("/")}`
+  return `/${processedSegments.join("/")}`
 }
 
 /**
  * Extracts a list of parameter names from the route's dynamic segments.
  *
  * This function analyzes the route structure to determine the best names
- * for parameters based on surrounding static segments:
- * - For dynamic segments with a preceding static part, it may combine them
- * - Namespace parts are handled specially to maintain intuitive naming
- * - Parameter names are camelCased for consistency
+ * for parameters based on surrounding segments
  *
  * @param {IntegrationResolvedRoute} route - The resolved route to check.
  * @returns {string[]} An array of parameter names, formatted in camelCase.
  */
 function getHelperParams(route: IntegrationResolvedRoute): string[] {
-  const parts = route.segments.flat()
-  const dynamicParts: RoutePart[] = parts.filter((part) => part.dynamic)
-  const processedParts: string[] = []
+  const segments = route.segments
+  const dynamicSegments: RoutePart[][] = segments.filter((segment) =>
+    isDynamicSegment(segment),
+  )
 
-  const hasParams = dynamicParts.length > 0
-
-  if (!hasParams) {
+  if (dynamicSegments.length === 0) {
     return []
   }
 
-  // @TODO: Stronger typing. We already know we don't support dynamic parts that
-  // are not preceded by a static part from `isSupportedRoute` but TypeScript
-  // doesn't know it yet
-  for (const [index, part] of parts.entries()) {
-    if (part.dynamic) {
-      const prevStaticPart =
-        index > 0 && !parts[index - 1].dynamic ? parts[index - 1] : undefined
+  const processedParts: string[] = []
 
-      const prevStaticPartIsNamespace =
-        prevStaticPart && partIsNamespace(prevStaticPart)
+  for (const [i, segment] of segments.entries()) {
+    const prevStaticSegment =
+      i > 0 && isStaticSegment(segments[i - 1]) ? segments[i - 1] : undefined
+    const nextSegment = i < segments.length - 1 ? segments[i + 1] : undefined
 
-      let processedPart = ""
+    // skip the segment if it's static because it don't generate params
+    if (isStaticSegment(segment)) {
+      continue
+    }
 
-      // If there's no previous static part, just camelCase the dynamic part
-      if (!prevStaticPart) {
-        processedPart = camelCase(part.content)
-      } else {
-        // Determine if we should use just the dynamic part
-        // For each of these two paths, we want the param to be `projectId`
-        // /projects/[projectId]
-        // /projects/[id]
-        const dynamicPartIncludesPrevStatic = part.content
+    for (const [_, part] of segment.entries()) {
+      if (!part.dynamic) {
+        continue
+      }
+
+      let processedPart = camelize(part.content, true)
+
+      const dynamicPartIncludesPrevStatic =
+        prevStaticSegment &&
+        part.content
           .toLowerCase()
-          .includes(singularize(prevStaticPart.content.toLowerCase()))
+          .includes(
+            singularize(normalizeSegment(prevStaticSegment).toLowerCase()),
+          )
 
-        const shouldUseOnlyDynamicPart =
-          prevStaticPartIsNamespace || dynamicPartIncludesPrevStatic
-
-        if (shouldUseOnlyDynamicPart) {
-          processedPart = camelCase(part.content)
-        } else {
-          processedPart = `${camelCase(singularize(prevStaticPart.content))}${pascalCase(part.content)}`
-        }
+      // Prepend the previous static segment content to the param if a bunch of conditions are true:
+      if (
+        // 1. This segment must follow a static segment
+        prevStaticSegment &&
+        // 2. The previous static segment must not be a namespace segment
+        !isNamespaceSegment(prevStaticSegment) &&
+        // 3. Any segment after this one must be a static segment
+        (!nextSegment || (nextSegment && isStaticSegment(nextSegment))) &&
+        // 4. This dynamic segment should be a single-part segment
+        segment.length === 1 &&
+        // 5. This dynamic part must not already include the previous static segment content
+        !dynamicPartIncludesPrevStatic
+      ) {
+        processedPart = camelize(
+          `${singularize(normalizeSegment(prevStaticSegment))}_${part.content}`,
+          true,
+        )
       }
 
       processedParts.push(processedPart)

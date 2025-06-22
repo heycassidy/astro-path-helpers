@@ -1,5 +1,4 @@
 import type { IntegrationResolvedRoute } from "astro"
-import { partIsNamespace } from "./util.ts"
 
 /**
  * Determines if a given route is supported for helper generation.
@@ -24,19 +23,23 @@ export function isSupportedRoute(route: IntegrationResolvedRoute): boolean {
 
   // Don't support rest params (yet?)
   if (parts.some((part) => part.spread)) {
+    console.warn("Astro Path Helpers: Spread params are not supported.")
     return false
   }
 
-  // Don't support multi-part segments (yet?)
-  if (route.segments.some((segment) => segment.length > 1)) {
-    return false
-  }
-
-  // Reject routes that have a dynamic part preceded by another dynamic part
+  // Reject routes that have a dynamic part preceded by an identical dynamic part
   for (const [index, part] of parts.entries()) {
     const prevPart = parts[index - 1]
 
-    if (part.dynamic && prevPart?.dynamic) {
+    if (
+      prevPart &&
+      part.dynamic &&
+      prevPart.dynamic &&
+      part.content === prevPart.content
+    ) {
+      console.warn(
+        "Astro Path Helpers: Sequential duplicate params are not supported.",
+      )
       return false
     }
   }
