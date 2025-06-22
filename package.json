@@ -18,8 +18,8 @@
     "test:unit:dev": "pnpm --filter astro-path-helpers test:unit:dev"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.4",
     "@changesets/changelog-github": "^0.5.1",
-    "@changesets/cli": "^2.28.1"
+    "@changesets/cli": "^2.29.5"
   }
 }
