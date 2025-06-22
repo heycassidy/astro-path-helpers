@@ -110,10 +110,10 @@ export function buildHelperPath(route: IntegrationResolvedRoute): string {
 
   const processedSegments: string[] = []
 
-  for (const [i, segment] of segments.entries()) {
+  for (const segment of segments) {
     const processedParts: string[] = []
 
-    for (const [_, part] of segment.entries()) {
+    for (const part of segment) {
       if (part.dynamic) {
         const dynamicPartIndex = dynamicParts.indexOf(part)
 

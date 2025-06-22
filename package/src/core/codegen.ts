@@ -1,4 +1,3 @@
-import type { IntegrationResolvedRoute } from "astro"
 import type {
   HelperTemplateContext,
   HelperTemplateContextStore,
