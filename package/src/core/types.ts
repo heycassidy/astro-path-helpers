@@ -1,5 +1,3 @@
-import type { IntegrationResolvedRoute } from "astro"
-
 export type PathHelpersOptions = Record<string, never> // no options supported yet
 
 // name, params, and path

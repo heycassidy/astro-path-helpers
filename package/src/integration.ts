@@ -1,4 +1,4 @@
-import type { AstroIntegration, IntegrationResolvedRoute } from "astro"
+import type { AstroIntegration } from "astro"
 import { createTemplateContext } from "./core/builders.ts"
 import {
   generatePathHelpers,

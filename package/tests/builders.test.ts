@@ -16,9 +16,15 @@ const routeFixtureToExpectedPartsMap = {
   ],
 
   rootParam: [
-    'rootSlug',
+    'rootSlugPath',
     'slug: string',
     '/${slug}',
+  ],
+
+  rootMultiPart: [
+    'rootDateSlugPath',
+    'date: string, slug: string',
+    '/${date}-${slug}',
   ],
 
   about: [
@@ -75,6 +81,12 @@ const routeFixtureToExpectedPartsMap = {
     '/products/${productId}',
   ],
 
+  productVariantDetail: [
+    'productPath',
+    'id: string, variant: string',
+    '/products/${id}-${variant}',
+  ],
+
   productReviews: [
     'productReviewsPath',
     'productId: string',
@@ -93,10 +105,16 @@ const routeFixtureToExpectedPartsMap = {
     '/dashboard',
   ],
 
-  dashboardSection: [
+  dashboardSectionI: [
     'dashboardSectionPath',
     'sectionId: string',
     '/dashboard/sections/${sectionId}',
+  ],
+
+  dashboardSectionII: [
+    'dashboardSectionPath',
+    'section: string',
+    '/dashboard/${section}',
   ],
 
   dashboardUser: [
@@ -134,6 +152,19 @@ const routeFixtureToExpectedPartsMap = {
     'teamId: string, memberId: string',
     '/dashboard/teams/${teamId}/members/${memberId}/permissions',
   ],
+
+  dateRangeMultiPart: [
+    'reportPath',
+    'startDate: string, endDate: string',
+    '/reports/${startDate}-to-${endDate}'
+  ],
+
+  docsLangVersion: [
+    'docPath',
+    'lang: string, version: string',
+    '/docs/${lang}/${version}',
+  ],
+
 }
 
 describe("buildHelperName", () => {

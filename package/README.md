@@ -138,6 +138,17 @@ Sometimes you might have a dynamic segment after a namespace segment. Unlike res
 **Route:** `/dashboard/[id].astro`\
 **Helper:** `dashboardIdPath(id: string)`
 
+### Other Examples
+
+#### Multi-part Segments
+**Route:** `/reports/[startDate]-to-[endDate]`\
+**Helper:** `reportPath(startDate: string, endDate: string)`
+
+#### Sequential parameters
+**Route:** `/docs/[lang]/[version]`\
+**Helper:** `docPath(lang: string, version: string)`\
+Note: Consecutive parameters must be unique. E.g. `/product/[id]/[id]` will not generate a path helper.
+
 ### Path Helper Conflicts
 
 It is possible for two different routes to generate helpers with the same name. For example, these two routes would generate path helpers with the same name, `dashboardSectionPath`:
@@ -150,12 +161,10 @@ Only one will be present in the generated code to avoid duplicate identifiers. I
 
 ## Limitations
 
-Currently, Astro Path Helpers has several limitations:
+Currently, Astro Path Helpers has a few limitations:
 
 - Only supports routes defined in the `/pages` directory
 - Does not support rest parameters in routes, e.g. `[...slug]`
-- Does not support multi-part segments in routes, e.g. `/pages/[zip]-[zap]`
-- Dynamic segments may not be preceded by another dynamic segment, e.g. `/pages/[zip]/[zap]` is not allowed because `[zap]` is preceded by the dynamic segment `[zip]`
 
 ## Roadmap
 
@@ -166,8 +175,8 @@ These are possible features in future releases:
 - [ ] Override auto-generated path helper names via the integration config
 - [ ] Support for [Endpoints](https://docs.astro.build/en/guides/endpoints/#server-endpoints-api-routes)
 - [ ] Support for rest parameters, e.g. /pages/books/[...slug]
-- [ ] Support for multi-part segments
-- [ ] Support for dynamic segments preceded by another dynamic segment, e.g. `/pages/products/[id]/[variant]` --> `productVariantPath(productId, variantId)`
+- [x] Support for multi-part segments
+- [x] Support for consecutive dynamic parts, e.g. `/pages/products/[id]/[variant]` --> `productPath(id, variant)`
 - [ ] Custom rules and overrides for route name singularization and pluralization
 
 I'd love to hear your ideas! Have a feature you'd like to see? Please reach out and share your suggestions - community feedback helps make this integration better for everyone!

@@ -77,29 +77,23 @@ export const routeFixtures = {
   dateRangeMultiPart: createMockRoute({
     pattern: "/reports/[startDate]-to-[endDate]",
     segments: [
+      [{ content: "reports", dynamic: false, spread: false }],
       [
-        {
-          content: "reports",
-          dynamic: false,
-          spread: false,
-        },
+        { content: "startDate", dynamic: true, spread: false },
+        { content: "-to-", dynamic: false, spread: false },
+        { content: "endDate", dynamic: true, spread: false },
       ],
+    ],
+  }),
+
+  namespaceDateRangeMultiPart: createMockRoute({
+    pattern: "/audit/[startDate]-to-[endDate]",
+    segments: [
+      [{ content: "audit", dynamic: false, spread: false }],
       [
-        {
-          content: "startDate",
-          dynamic: true,
-          spread: false,
-        },
-        {
-          content: "-to-",
-          dynamic: false,
-          spread: false,
-        },
-        {
-          content: "endDate",
-          dynamic: true,
-          spread: false,
-        },
+        { content: "startDate", dynamic: true, spread: false },
+        { content: "-to-", dynamic: false, spread: false },
+        { content: "endDate", dynamic: true, spread: false },
       ],
     ],
   }),
@@ -113,6 +107,14 @@ export const routeFixtures = {
     ],
   }),
 
+  duplicateConsecutiveParams: createMockRoute({
+    pattern: "/[id]/[id]",
+    segments: [
+      [{ content: "id", dynamic: true, spread: false }],
+      [{ content: "id", dynamic: true, spread: false }],
+    ],
+  }),
+
   root: createMockRoute({
     pattern: "/",
     segments: [],
@@ -121,6 +123,17 @@ export const routeFixtures = {
   rootParam: createMockRoute({
     pattern: "/[slug]",
     segments: [[{ content: "slug", dynamic: true, spread: false }]],
+  }),
+
+  rootMultiPart: createMockRoute({
+    pattern: "/[date]-[slug]",
+    segments: [
+      [
+        { content: "date", dynamic: true, spread: false },
+        { content: "-", dynamic: false, spread: false },
+        { content: "slug", dynamic: true, spread: false },
+      ],
+    ],
   }),
 
   about: createMockRoute({
@@ -138,6 +151,16 @@ export const routeFixtures = {
     segments: [
       [{ content: "blog", dynamic: false, spread: false }],
       [{ content: "...slug", dynamic: true, spread: true }],
+    ],
+  }),
+
+  blogDoubleSpread: createMockRoute({
+    pattern: "/blog/[...category]/posts/[...tags]",
+    segments: [
+      [{ content: "blog", dynamic: false, spread: false }],
+      [{ content: "...category", dynamic: true, spread: true }],
+      [{ content: "posts", dynamic: false, spread: false }],
+      [{ content: "...tags", dynamic: true, spread: true }],
     ],
   }),
 
@@ -198,6 +221,35 @@ export const routeFixtures = {
     ],
   }),
 
+  productVariantDetail: createMockRoute({
+    pattern: "/products/[id]-[variant]",
+    segments: [
+      [{ content: "products", dynamic: false, spread: false }],
+      [
+        { content: "id", dynamic: true, spread: false },
+        { content: "-", dynamic: false, spread: false },
+        { content: "variant", dynamic: true, spread: false },
+      ],
+    ],
+  }),
+
+  productCategoriesSpread: createMockRoute({
+    pattern: "products/[...categories]",
+    segments: [
+      [{ content: "products", dynamic: false, spread: false }],
+      [{ content: "...categories", dynamic: true, spread: true }],
+    ],
+  }),
+
+  productCategoriesSpreadDetail: createMockRoute({
+    pattern: "products/[...categories]/[productId]",
+    segments: [
+      [{ content: "products", dynamic: false, spread: false }],
+      [{ content: "...categories", dynamic: true, spread: true }],
+      [{ content: "productId", dynamic: true, spread: false }],
+    ],
+  }),
+
   productReviews: createMockRoute({
     pattern: "/products/[id]/reviews",
     segments: [
@@ -220,12 +272,20 @@ export const routeFixtures = {
     segments: [[{ content: "dashboard", dynamic: false, spread: false }]],
   }),
 
-  dashboardSection: createMockRoute({
+  dashboardSectionI: createMockRoute({
     pattern: "/dashboard/sections/[id]",
     segments: [
       [{ content: "dashboard", dynamic: false, spread: false }],
       [{ content: "sections", dynamic: false, spread: false }],
       [{ content: "id", dynamic: true, spread: false }],
+    ],
+  }),
+
+  dashboardSectionII: createMockRoute({
+    pattern: "/dashboard/[section]",
+    segments: [
+      [{ content: "dashboard", dynamic: false, spread: false }],
+      [{ content: "section", dynamic: true, spread: false }],
     ],
   }),
 
@@ -249,13 +309,13 @@ export const routeFixtures = {
   }),
 
   dashboardProjectTaskEdit: createMockRoute({
-    pattern: "/dashboard/projects/[projectId]/tasks/[taskId]/edit",
+    pattern: "/dashboard/projects/[id]/tasks/[id]/edit",
     segments: [
       [{ content: "dashboard", dynamic: false, spread: false }],
       [{ content: "projects", dynamic: false, spread: false }],
-      [{ content: "projectId", dynamic: true, spread: false }],
+      [{ content: "id", dynamic: true, spread: false }],
       [{ content: "tasks", dynamic: false, spread: false }],
-      [{ content: "taskId", dynamic: true, spread: false }],
+      [{ content: "id", dynamic: true, spread: false }],
       [{ content: "edit", dynamic: false, spread: false }],
     ],
   }),
@@ -285,6 +345,20 @@ export const routeFixtures = {
       [{ content: "dashboard", dynamic: false, spread: false }],
       [{ content: "audit", dynamic: false, spread: false }],
       [{ content: "eventId", dynamic: true, spread: false }],
+      [{ content: "details", dynamic: false, spread: false }],
+    ],
+  }),
+
+  dashboardAuditEventDateDetails: createMockRoute({
+    pattern: "/dashboard/audit/[eventId]-[date]/details",
+    segments: [
+      [{ content: "dashboard", dynamic: false, spread: false }],
+      [{ content: "audit", dynamic: false, spread: false }],
+      [
+        { content: "eventId", dynamic: true, spread: false },
+        { content: "-", dynamic: false, spread: false },
+        { content: "date", dynamic: true, spread: false },
+      ],
       [{ content: "details", dynamic: false, spread: false }],
     ],
   }),
