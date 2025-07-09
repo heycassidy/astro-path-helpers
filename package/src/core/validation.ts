@@ -21,12 +21,6 @@ export function isSupportedRoute(route: IntegrationResolvedRoute): boolean {
     return false
   }
 
-  // Don't support rest params (yet?)
-  if (parts.some((part) => part.spread)) {
-    console.warn("Astro Path Helpers: Spread params are not supported.")
-    return false
-  }
-
   // Reject routes that have a dynamic part preceded by an identical dynamic part
   for (const [index, part] of parts.entries()) {
     const prevPart = parts[index - 1]

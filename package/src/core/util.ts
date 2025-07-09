@@ -7,7 +7,7 @@ export const normalizeSegment = (
 ): string => {
   // Filter out non-alphabet parts and join the remaining
   const filtered = segment
-    .map((part) => part.content)
+    .map((part) => part.content.replace("...", ""))
     .filter((content) => /^[a-zA-Z]+$/.test(content))
     // join underscore to support case conversion
     .join("_")

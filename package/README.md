@@ -140,6 +140,18 @@ Sometimes you might have a dynamic segment after a namespace segment. Unlike res
 
 ### Other Examples
 
+#### Rest Parameters
+**Route:** `/docs/[...slug]`\
+**Helper:** `docPath(slug: string[])`
+Notice: `slug` is an array of strings.
+
+#### First Segment is Dynamic
+When the first segment in the route is dynamic, it will be used in the path helper name.
+
+For example:
+**Route:** `/[locale]/[...slug]`\
+**Helper:** `localePath(slug: string[])`
+
 #### Multi-part Segments
 **Route:** `/reports/[startDate]-to-[endDate]`\
 **Helper:** `reportPath(startDate: string, endDate: string)`
@@ -159,13 +171,6 @@ It is possible for two different routes to generate helpers with the same name. 
 Only one will be present in the generated code to avoid duplicate identifiers. It is recommended to rename one of the parameters so that you get path helpers for both routes. For example: change the second route to `/pages/dashboard/[id].astro` to change its path helper to `dashboardIdPath(id: string)`.
 
 
-## Limitations
-
-Currently, Astro Path Helpers has a few limitations:
-
-- Only supports routes defined in the `/pages` directory
-- Does not support rest parameters in routes, e.g. `[...slug]`
-
 ## Roadmap
 
 These are possible features in future releases:
@@ -174,7 +179,7 @@ These are possible features in future releases:
 - [ ] Custom path helpers via the integration config
 - [ ] Override auto-generated path helper names via the integration config
 - [ ] Support for [Endpoints](https://docs.astro.build/en/guides/endpoints/#server-endpoints-api-routes)
-- [ ] Support for rest parameters, e.g. /pages/books/[...slug]
+- [x] Support for rest parameters, e.g. /pages/books/[...slug]
 - [x] Support for multi-part segments
 - [x] Support for consecutive dynamic parts, e.g. `/pages/products/[id]/[variant]` --> `productPath(id, variant)`
 - [ ] Custom rules and overrides for route name singularization and pluralization

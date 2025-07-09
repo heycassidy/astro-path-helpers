@@ -1,0 +1,35 @@
+---
+import { localePath } from "astro-path-helpers/generated"
+
+export async function getStaticPaths() {
+  const pages = [
+    {
+      locale:"en-us",
+      slug: "products",
+    },
+    {
+      locale: "en-gb",
+      slug: "products",
+    },
+    {
+      locale: "en-us",
+      slug: "products/astro-handbook",
+    },
+  ];
+
+  return pages.map(({ locale, slug }) => {
+    const currentPagePath = localePath(locale, slug.split("/"))
+
+    return {
+      params: { locale, slug },
+      props: { path: currentPagePath },
+    };
+  });
+
+}
+
+const { path } = Astro.props;
+
+
+---
+<h1>Current Page Path: {path}</h1>

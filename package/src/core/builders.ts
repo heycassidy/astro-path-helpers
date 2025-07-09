@@ -29,43 +29,28 @@ export function buildHelperName(route: IntegrationResolvedRoute): string {
     return "rootPath"
   }
 
-  if (segments.length === 1 && isDynamicSegment(segments[0])) {
-    return ["root", normalizeSegment(segments[0], false), "Path"].join("")
-  }
-
   let helperNameParts = ""
 
   for (const [i, segment] of segments.entries()) {
     const nextSegment =
       (i < segments.length - 1 && segments[i + 1]) || undefined
+    const previousSegment = (i > 0 && segments[i - 1]) || undefined
 
     let currentSegmentName = normalizeSegment(segment)
 
-    if (isDynamicSegment(segment)) {
+    if (
+      isDynamicSegment(segment) &&
+      previousSegment &&
+      !isNamespaceSegment(previousSegment)
+    ) {
       continue
     }
 
-    // Usually, you expect namespace parts to precede a static part, BUT
-    // For namespace parts which precede a parameter,
-    // we need to add the param to the function name
-    // to avoid duplicate helper names
-    //
     if (
-      isNamespaceSegment(segment) &&
       nextSegment &&
-      isDynamicSegment(nextSegment)
-    ) {
-      currentSegmentName = [
-        currentSegmentName,
-        normalizeSegment(nextSegment),
-      ].join("_")
-    }
-
-    if (
-      !isNamespaceSegment(segment) &&
-      isStaticSegment(segment) &&
-      nextSegment &&
-      isDynamicSegment(nextSegment)
+      isDynamicSegment(nextSegment) &&
+      ((!isNamespaceSegment(segment) && isStaticSegment(segment)) ||
+        isNamespaceSegment(segment))
     ) {
       currentSegmentName = singularize(currentSegmentName)
     }
@@ -87,8 +72,16 @@ export function buildHelperName(route: IntegrationResolvedRoute): string {
  * @returns {string} A comma-separated list of parameters with type annotations.
  */
 export function buildHelperParams(route: IntegrationResolvedRoute): string {
-  const params = getHelperParams(route)
-  return params.map((param) => `${param}: string`).join(", ")
+  const paramData = getHelperParamData(route)
+  return paramData
+    .map((paramDatum) => {
+      if (paramDatum.spread) {
+        return `${paramDatum.param}: string[]`
+      }
+
+      return `${paramDatum.param}: string`
+    })
+    .join(", ")
 }
 
 /**
@@ -104,7 +97,7 @@ export function buildHelperParams(route: IntegrationResolvedRoute): string {
 export function buildHelperPath(route: IntegrationResolvedRoute): string {
   const segments = route.segments
   const parts = segments.flat()
-  const params = getHelperParams(route)
+  const paramData = getHelperParamData(route)
 
   const dynamicParts: RoutePart[] = parts.filter((part) => part.dynamic)
 
@@ -116,8 +109,12 @@ export function buildHelperPath(route: IntegrationResolvedRoute): string {
     for (const part of segment) {
       if (part.dynamic) {
         const dynamicPartIndex = dynamicParts.indexOf(part)
-
-        processedParts.push(`\$\{${params[dynamicPartIndex]}\}`)
+        const paramDatum = paramData[dynamicPartIndex]
+        if (paramDatum.spread) {
+          processedParts.push(`\$\{${paramDatum.param}.join("/")\}`)
+        } else if (!paramDatum.spread) {
+          processedParts.push(`\$\{${paramDatum.param}\}`)
+        }
       } else {
         processedParts.push(part.content)
       }
@@ -138,7 +135,13 @@ export function buildHelperPath(route: IntegrationResolvedRoute): string {
  * @param {IntegrationResolvedRoute} route - The resolved route to check.
  * @returns {string[]} An array of parameter names, formatted in camelCase.
  */
-function getHelperParams(route: IntegrationResolvedRoute): string[] {
+type HelperParamDatum = Pick<RoutePart, "spread"> & {
+  param: string
+  dynamic: true
+}
+function getHelperParamData(
+  route: IntegrationResolvedRoute,
+): HelperParamDatum[] {
   const segments = route.segments
   const dynamicSegments: RoutePart[][] = segments.filter((segment) =>
     isDynamicSegment(segment),
@@ -148,7 +151,7 @@ function getHelperParams(route: IntegrationResolvedRoute): string[] {
     return []
   }
 
-  const processedParts: string[] = []
+  const processedParts: HelperParamDatum[] = []
 
   for (const [i, segment] of segments.entries()) {
     const prevStaticSegment =
@@ -165,11 +168,13 @@ function getHelperParams(route: IntegrationResolvedRoute): string[] {
         continue
       }
 
-      let processedPart = camelize(part.content, true)
+      const normalizedPartContent = part.content.replace("...", "")
+
+      let processedParam = camelize(normalizedPartContent, true)
 
       const dynamicPartIncludesPrevStatic =
         prevStaticSegment &&
-        part.content
+        normalizedPartContent
           .toLowerCase()
           .includes(
             singularize(normalizeSegment(prevStaticSegment).toLowerCase()),
@@ -189,13 +194,17 @@ function getHelperParams(route: IntegrationResolvedRoute): string[] {
         // 5. This dynamic part must not already include the previous static segment content
         !dynamicPartIncludesPrevStatic
       ) {
-        processedPart = camelize(
-          `${singularize(normalizeSegment(prevStaticSegment))}_${part.content}`,
+        processedParam = camelize(
+          `${singularize(normalizeSegment(prevStaticSegment))}_${normalizedPartContent}`,
           true,
         )
       }
 
-      processedParts.push(processedPart)
+      processedParts.push({
+        param: processedParam,
+        dynamic: part.dynamic,
+        spread: part.spread,
+      })
     }
   }
 
