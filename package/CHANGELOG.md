@@ -1,5 +1,15 @@
 # astro-path-helpers
 
+## 0.5.0
+
+### Minor Changes
+
+- [#14](https://github.com/heycassidy/astro-path-helpers/pull/14) [`e277cd1`](https://github.com/heycassidy/astro-path-helpers/commit/e277cd1915ad733a915050d4516ce54e32d9182b) Thanks [@heycassidy](https://github.com/heycassidy)! - Adds support for routes with rest parameters, e.g. `/[locale]/[...slug]`
+
+- [#14](https://github.com/heycassidy/astro-path-helpers/pull/14) [`ffe5bfa`](https://github.com/heycassidy/astro-path-helpers/commit/ffe5bfa28ab0794c1162861e578aa39051d47bb0) Thanks [@heycassidy](https://github.com/heycassidy)! - Changes path helper names for routes with root-level dynamic segments
+
+  E.g. the route `/[slug]` would previously have generated `rootSlugPath(slug: string)`. Now, it generates `slugPath(slug: string)`
+
 ## 0.4.0
 
 ### Minor Changes
