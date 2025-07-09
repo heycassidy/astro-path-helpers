@@ -136,6 +136,32 @@ export const routeFixtures = {
     ],
   }),
 
+  localeSlug: createMockRoute({
+    pattern: "/[locale]/[...slug]",
+    segments: [
+      [{ content: "locale", dynamic: true, spread: false }],
+      [{ content: "...slug", dynamic: true, spread: true }],
+    ],
+  }),
+
+  localeSlugDoubleSpread: createMockRoute({
+    pattern: "/[...locale]/[...slug]",
+    segments: [
+      [{ content: "...locale", dynamic: true, spread: true }],
+      [{ content: "...slug", dynamic: true, spread: true }],
+    ],
+  }),
+
+  localeVersionDocsTopic: createMockRoute({
+    pattern: "/[locale]/[version]/docs/[...topic]",
+    segments: [
+      [{ content: "locale", dynamic: true, spread: false }],
+      [{ content: "version", dynamic: true, spread: false }],
+      [{ content: "docs", dynamic: false, spread: false }],
+      [{ content: "...topic", dynamic: true, spread: true }],
+    ],
+  }),
+
   about: createMockRoute({
     pattern: "/about",
     segments: [[{ content: "about", dynamic: false, spread: false }]],
@@ -151,16 +177,6 @@ export const routeFixtures = {
     segments: [
       [{ content: "blog", dynamic: false, spread: false }],
       [{ content: "...slug", dynamic: true, spread: true }],
-    ],
-  }),
-
-  blogDoubleSpread: createMockRoute({
-    pattern: "/blog/[...category]/posts/[...tags]",
-    segments: [
-      [{ content: "blog", dynamic: false, spread: false }],
-      [{ content: "...category", dynamic: true, spread: true }],
-      [{ content: "posts", dynamic: false, spread: false }],
-      [{ content: "...tags", dynamic: true, spread: true }],
     ],
   }),
 
@@ -234,7 +250,7 @@ export const routeFixtures = {
   }),
 
   productCategoriesSpread: createMockRoute({
-    pattern: "products/[...categories]",
+    pattern: "/products/[...categories]",
     segments: [
       [{ content: "products", dynamic: false, spread: false }],
       [{ content: "...categories", dynamic: true, spread: true }],

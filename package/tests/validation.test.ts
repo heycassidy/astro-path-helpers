@@ -24,14 +24,14 @@ describe("isSupportedRoute", () => {
     expect(isSupportedRoute(routeFixtures.fallback)).toBe(false)
   })
 
-  it("rejects route with spread part", () => {
-    expect(isSupportedRoute(routeFixtures.blogSpread)).toBe(false)
-  })
-
   it("rejects route with a dynamic part preceded by another identical dynamic part", () => {
     expect(isSupportedRoute(routeFixtures.duplicateConsecutiveParams)).toBe(
       false,
     )
+  })
+
+  it("accepts route with spread part", () => {
+    expect(isSupportedRoute(routeFixtures.blogSpread)).toBe(true)
   })
 
   it("accepts route with dynamic part after namespace part", () => {

@@ -27,6 +27,24 @@ const routeFixtureToExpectedPartsMap = {
     '/${date}-${slug}',
   ],
 
+  localeSlug: [
+    'localePath',
+    'locale: string, slug: string[]',
+    '/${locale}/${slug.join("/")}',
+  ],
+
+  localeSlugDoubleSpread: [
+    'localePath',
+    'locale: string[], slug: string[]',
+    '/${locale.join("/")}/${slug.join("/")}',
+  ],
+
+  localeVersionDocsTopic: [
+    'localeDocPath',
+    'locale: string, version: string, docTopic: string[]',
+    '/${locale}/${version}/docs/${docTopic.join("/")}',
+  ],
+
   about: [
     'aboutPath',
     '',
