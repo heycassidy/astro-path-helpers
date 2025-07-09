@@ -16,13 +16,13 @@ const routeFixtureToExpectedPartsMap = {
   ],
 
   rootParam: [
-    'rootSlugPath',
+    'slugPath',
     'slug: string',
     '/${slug}',
   ],
 
   rootMultiPart: [
-    'rootDateSlugPath',
+    'dateSlugPath',
     'date: string, slug: string',
     '/${date}-${slug}',
   ],

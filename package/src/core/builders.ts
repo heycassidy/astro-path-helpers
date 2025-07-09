@@ -29,10 +29,6 @@ export function buildHelperName(route: IntegrationResolvedRoute): string {
     return "rootPath"
   }
 
-  if (segments.length === 1 && isDynamicSegment(segments[0])) {
-    return ["root", normalizeSegment(segments[0], false), "Path"].join("")
-  }
-
   let helperNameParts = ""
 
   for (const [i, segment] of segments.entries()) {
