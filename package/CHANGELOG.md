@@ -1,5 +1,11 @@
 # astro-path-helpers
 
+## 0.6.0
+
+### Minor Changes
+
+- [#16](https://github.com/heycassidy/astro-path-helpers/pull/16) [`8171457`](https://github.com/heycassidy/astro-path-helpers/commit/8171457ea9ff6226953092de389227b5e7375fec) Thanks [@heycassidy](https://github.com/heycassidy)! - Adds support for Astro v6
+
 ## 0.5.0
 
 ### Minor Changes
