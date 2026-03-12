@@ -45,7 +45,7 @@
   },
   "type": "module",
   "peerDependencies": {
-    "astro": "^5.0.0"
+    "astro": "^5.0.0 || ^6.0.0"
   },
   "dependencies": {
     "inflection": "^3.0.2"
@@ -53,8 +53,8 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^3.1.1",
     "@vitest/ui": "^3.1.1",
-    "astro": "^5.10.0",
-    "astro-integration-kit": "^0.18.0",
+    "astro": "^6.0.0",
+    "astro-integration-kit": "^0.20.0",
     "esbuild": "^0.25.1",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
