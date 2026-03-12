@@ -46,15 +46,22 @@ jobs:
       - name: Build
         run: pnpm --filter astro-path-helpers build
 
-      - name: Create Release Pull Request or Publish
+      - name: Create Release Pull Request
         id: changesets
-        if: ${{ github.event_name == 'push' }}
         uses: changesets/action@v1
         with:
           version: pnpm run ci:version
-          publish: pnpm run ci:publish
           commit: "[ci] release"
           title: "[ci] release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: pnpm exec changeset publish
+        env:
           NPM_CONFIG_PROVENANCE: true
+
+      - name: Push tags
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: git push --follow-tags
